@@ -1,0 +1,423 @@
+
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+interface Message {
+  id: number;
+  text: string;
+  timestamp: string;
+  isUser: boolean;
+  isAI?: boolean;
+}
+
+interface Creator {
+  id: number;
+  name: string;
+  image: string;
+  tier: string;
+  isOnline: boolean;
+}
+
+export default function ChatPage() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [message, setMessage] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showSummary, setShowSummary] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const creator: Creator = {
+    id: 1,
+    name: 'Sarah Johnson',
+    image: 'https://readdy.ai/api/search-image?query=Professional%20fitness%20influencer%20woman%20in%20athletic%20wear%2C%20bright%20studio%20lighting%2C%20confident%20pose%2C%20modern%20gym%20background%2C%20high-quality%20portrait%20photography%2C%20clean%20aesthetic%2C%20motivational%20atmosphere&width=100&height=100&seq=chat1&orientation=squarish',
+    tier: 'VIP',
+    isOnline: true
+  };
+
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 1,
+      text: 'Hey! Thanks for subscribing to my VIP tier! 💪',
+      timestamp: '10:30 AM',
+      isUser: false
+    },
+    {
+      id: 2,
+      text: 'I\'m so excited to work with you on your fitness journey!',
+      timestamp: '10:30 AM',
+      isUser: false
+    },
+    {
+      id: 3,
+      text: 'Hi Sarah! I\'m really excited too. I\'ve been struggling with consistency in my workouts.',
+      timestamp: '10:32 AM',
+      isUser: true
+    },
+    {
+      id: 4,
+      text: 'That\'s totally normal! Consistency is the biggest challenge for most people. What\'s your current routine like?',
+      timestamp: '10:33 AM',
+      isUser: false
+    },
+    {
+      id: 5,
+      text: 'I try to go to the gym 3 times a week but I usually only make it once or twice.',
+      timestamp: '10:35 AM',
+      isUser: true
+    },
+    {
+      id: 6,
+      text: 'AI Assistant: Based on your conversation, I\'ve prepared a personalized workout schedule that fits your lifestyle. Sarah will review it shortly.',
+      timestamp: '10:36 AM',
+      isUser: false,
+      isAI: true
+    },
+    {
+      id: 7,
+      text: 'Perfect! The AI assistant is spot on. Let\'s start with 2 days a week and build from there. Quality over quantity! 🎯',
+      timestamp: '10:38 AM',
+      isUser: false
+    }
+  ]);
+
+  const aiSuggestions = [
+    "That sounds like a great plan! When should we start?",
+    "I appreciate your help with this 🙏",
+    "What exercises would you recommend for beginners?",
+    "How long should each workout session be?",
+    "Thank you for the personalized approach!",
+    "I'm ready to commit to this routine 💪"
+  ];
+
+  const threadSummary = {
+    topic: "Fitness Journey & Workout Consistency",
+    keyPoints: [
+      "User subscribed to VIP tier for fitness coaching",
+      "Main challenge: workout consistency (aims for 3x/week, achieves 1-2x)",
+      "Sarah recommends starting with 2 days/week approach",
+      "AI assistant prepared personalized workout schedule",
+      "Focus on quality over quantity for sustainable results"
+    ],
+    nextSteps: [
+      "Review AI-generated workout schedule",
+      "Start with 2 workout sessions per week",
+      "Build consistency before increasing frequency"
+    ]
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      const newMessage: Message = {
+        id: messages.length + 1,
+        text: message,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        isUser: true
+      };
+      
+      setMessages([...messages, newMessage]);
+      setMessage('');
+      setIsTyping(true);
+      
+      // Simulate creator response
+      setTimeout(() => {
+        setIsTyping(false);
+        const response: Message = {
+          id: messages.length + 2,
+          text: "Thanks for sharing that! I'll create a custom plan just for you 🌟",
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          isUser: false
+        };
+        setMessages(prev => [...prev, response]);
+      }, 2000);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setMessage(suggestion);
+    setShowSuggestions(false);
+  };
+
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'VIP': return 'bg-gradient-to-r from-purple-500 to-pink-500 text-white';
+      case 'Pro': return 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400';
+      case 'Basic': return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+      default: return 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+      {/* Header */}
+      <header className="fixed top-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-sm z-50 border-b border-gray-200 dark:border-gray-700">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <button 
+                onClick={() => navigate('/messages')}
+                className="w-8 h-8 flex items-center justify-center"
+              >
+                <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
+              
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <img 
+                    src={creator.image} 
+                    alt={creator.name}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  {creator.isOnline && (
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
+                  )}
+                </div>
+                
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <h1 className="font-semibold text-gray-900 dark:text-white">{creator.name}</h1>
+                    <span className={`text-xs px-2 py-1 rounded-full ${getTierColor(creator.tier)}`}>
+                      {creator.tier}
+                    </span>
+                  </div>
+                  <p className="text-xs text-green-500">Online now</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <button 
+                onClick={() => setShowSummary(true)}
+                className="w-8 h-8 flex items-center justify-center"
+              >
+                <i className="ri-file-text-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
+              <button className="w-8 h-8 flex items-center justify-center">
+                <i className="ri-more-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Messages */}
+      <main className="flex-1 pt-20 pb-32 px-4 overflow-y-auto">
+        <div className="space-y-4">
+          {messages.map((msg) => (
+            <div key={msg.id} className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}>
+              <div className={`max-w-[280px] ${msg.isUser ? 'order-2' : 'order-1'}`}>
+                {!msg.isUser && (
+                  <div className="flex items-center space-x-2 mb-1">
+                    <img 
+                      src={creator.image} 
+                      alt={creator.name}
+                      className="w-6 h-6 rounded-full object-cover"
+                    />
+                    {msg.isAI && (
+                      <div className="flex items-center space-x-1">
+                        <i className="ri-robot-line text-blue-500 text-xs"></i>
+                        <span className="text-xs text-blue-500">AI Assistant</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                <div className={`rounded-2xl px-4 py-3 ${
+                  msg.isUser 
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' 
+                    : msg.isAI
+                    ? 'bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800'
+                    : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700'
+                }`}>
+                  <p className={`text-sm ${
+                    msg.isUser 
+                      ? 'text-white' 
+                      : msg.isAI
+                      ? 'text-blue-700 dark:text-blue-300'
+                      : 'text-gray-900 dark:text-white'
+                  }`}>
+                    {msg.text}
+                  </p>
+                </div>
+                
+                <p className={`text-xs text-gray-500 dark:text-gray-400 mt-1 ${
+                  msg.isUser ? 'text-right' : 'text-left'
+                }`}>
+                  {msg.timestamp}
+                </p>
+              </div>
+            </div>
+          ))}
+          
+          {isTyping && (
+            <div className="flex justify-start">
+              <div className="max-w-[280px]">
+                <div className="flex items-center space-x-2 mb-1">
+                  <img 
+                    src={creator.image} 
+                    alt={creator.name}
+                    className="w-6 h-6 rounded-full object-cover"
+                  />
+                </div>
+                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
+      </main>
+
+      {/* AI Suggestions */}
+      {showSuggestions && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
+          <div className="w-full bg-white dark:bg-gray-800 rounded-t-2xl p-4 max-h-[60vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">AI Suggestions</h3>
+              <button 
+                onClick={() => setShowSuggestions(false)}
+                className="w-8 h-8 flex items-center justify-center"
+              >
+                <i className="ri-close-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
+            </div>
+            
+            <div className="space-y-2 mb-4">
+              {aiSuggestions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="w-full p-3 text-left bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                >
+                  <p className="text-gray-900 dark:text-white text-sm">{suggestion}</p>
+                </button>
+              ))}
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+              <div className="flex items-center space-x-2">
+                <i className="ri-robot-line text-purple-600 dark:text-purple-400"></i>
+                <span className="text-sm text-purple-600 dark:text-purple-400">AI Assistant Active</span>
+              </div>
+              <button 
+                onClick={() => navigate('/settings')}
+                className="text-sm text-purple-600 dark:text-purple-400 font-medium"
+              >
+                Customize
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Thread Summary */}
+      {showSummary && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl p-6 max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Thread Summary</h3>
+              <button 
+                onClick={() => setShowSummary(false)}
+                className="w-8 h-8 flex items-center justify-center"
+              >
+                <i className="ri-close-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium text-gray-900 dark:text-white mb-2">Topic</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                  {threadSummary.topic}
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-gray-900 dark:text-white mb-2">Key Points</h4>
+                <div className="space-y-2">
+                  {threadSummary.keyPoints.map((point, index) => (
+                    <div key={index} className="flex items-start space-x-2">
+                      <i className="ri-checkbox-circle-line text-green-500 text-sm mt-0.5 flex-shrink-0"></i>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{point}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium text-gray-900 dark:text-white mb-2">Next Steps</h4>
+                <div className="space-y-2">
+                  {threadSummary.nextSteps.map((step, index) => (
+                    <div key={index} className="flex items-start space-x-2">
+                      <i className="ri-arrow-right-circle-line text-purple-500 text-sm mt-0.5 flex-shrink-0"></i>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{step}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <i className="ri-robot-line text-blue-600 dark:text-blue-400"></i>
+                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">AI Generated Summary</span>
+              </div>
+              <p className="text-xs text-blue-600 dark:text-blue-400">
+                This summary is automatically generated based on your conversation history and updated in real-time.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Message Input */}
+      <div className="fixed bottom-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700 p-4">
+        <div className="flex items-end space-x-3">
+          <button 
+            onClick={() => setShowSuggestions(true)}
+            className="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-full"
+          >
+            <i className="ri-robot-line text-gray-600 dark:text-gray-400"></i>
+          </button>
+          
+          <div className="flex-1 relative">
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Type a message..."
+              className="w-full bg-gray-100 dark:bg-gray-700 border-none rounded-2xl px-4 py-3 pr-12 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 max-h-32"
+              rows={1}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                }
+              }}
+            />
+            <button
+              onClick={handleSendMessage}
+              disabled={!message.trim()}
+              className="absolute right-2 bottom-2 w-8 h-8 flex items-center justify-center bg-gradient-to-r from-purple-500 to-pink-500 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <i className="ri-send-plane-line text-white text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
