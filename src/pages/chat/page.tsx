@@ -376,7 +376,7 @@ export default function ChatPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-sm z-50 border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-sm z-[100] border-b border-gray-200 dark:border-gray-700">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -612,7 +612,7 @@ export default function ChatPage() {
       )}
 
       {/* Message Input */}
-      <div className="fixed bottom-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700 p-4">
+      <div className="fixed bottom-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700 p-4 z-[100]">
         <div className="flex items-end space-x-3">
           <button 
             onClick={() => setShowSuggestions(true)}
