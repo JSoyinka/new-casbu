@@ -1,10 +1,11 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function HostSignupPage() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [formData, setFormData] = useState({
     hostType: '',
     name: '',
@@ -44,34 +45,42 @@ export default function HostSignupPage() {
     if (step > 1) setStep(step - 1);
   };
 
-  const handleSubmit = () => {
-    // Here you would typically submit to your backend
-    console.log('Host signup data:', formData);
-    navigate('/host-dashboard');
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setShowSuccess(true);
+      
+      setTimeout(() => {
+        navigate('/profile', { state: { enableCreatorMode: true } });
+      }, 2000);
+    }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-900">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white shadow-sm z-50">
+      <header className="fixed top-0 w-full bg-gray-800 shadow-sm z-50 border-b border-gray-700">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <button onClick={() => navigate('/')} className="w-8 h-8 flex items-center justify-center">
-              <i className="ri-arrow-left-line text-gray-600 text-lg"></i>
+              <i className="ri-arrow-left-line text-gray-300 text-lg"></i>
             </button>
-            <h1 className="text-lg font-semibold">Become a Creator</h1>
+            <h1 className="text-lg font-semibold text-white">Become a Creator</h1>
             <div className="w-8"></div>
           </div>
         </div>
       </header>
 
       {/* Progress Bar */}
-      <div className="fixed top-16 w-full bg-white border-b border-gray-200 px-4 py-3">
+      <div className="fixed top-16 w-full bg-gray-800 border-b border-gray-700 px-4 py-3">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-600">Step {step} of 4</span>
-          <span className="text-sm text-gray-600">{Math.round((step / 4) * 100)}%</span>
+          <span className="text-sm text-gray-400">Step {step} of 4</span>
+          <span className="text-sm text-gray-400">{Math.round((step / 4) * 100)}%</span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-gray-700 rounded-full h-2">
           <div 
             className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-300"
             style={{ width: `${(step / 4) * 100}%` }}
@@ -84,8 +93,8 @@ export default function HostSignupPage() {
         {/* Step 1: Host Type */}
         {step === 1 && (
           <div>
-            <h2 className="text-2xl font-bold mb-2">What type of creator are you?</h2>
-            <p className="text-gray-600 mb-6">This helps us customize your experience</p>
+            <h2 className="text-2xl font-bold mb-2 text-white">What type of creator are you?</h2>
+            <p className="text-gray-400 mb-6">This helps us customize your experience</p>
             
             <div className="space-y-3">
               {hostTypes.map((type) => (
@@ -94,19 +103,19 @@ export default function HostSignupPage() {
                   onClick={() => setFormData({ ...formData, hostType: type.id })}
                   className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
                     formData.hostType === type.id 
-                      ? 'border-purple-500 bg-purple-50' 
-                      : 'border-gray-200 bg-white'
+                      ? 'border-purple-500 bg-purple-500/10' 
+                      : 'border-gray-700 bg-gray-800'
                   }`}
                 >
                   <div className="flex items-start space-x-3">
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      formData.hostType === type.id ? 'bg-purple-500 text-white' : 'bg-gray-100 text-gray-600'
+                      formData.hostType === type.id ? 'bg-purple-500 text-white' : 'bg-gray-700 text-gray-300'
                     }`}>
                       <i className={`${type.icon} text-lg`}></i>
                     </div>
                     <div>
-                      <h3 className="font-semibold mb-1">{type.title}</h3>
-                      <p className="text-sm text-gray-600">{type.description}</p>
+                      <h3 className="font-semibold mb-1 text-white">{type.title}</h3>
+                      <p className="text-sm text-gray-400">{type.description}</p>
                     </div>
                   </div>
                 </button>
@@ -118,53 +127,53 @@ export default function HostSignupPage() {
         {/* Step 2: Basic Info */}
         {step === 2 && (
           <div>
-            <h2 className="text-2xl font-bold mb-2">Tell us about yourself</h2>
-            <p className="text-gray-600 mb-6">Basic information for your profile</p>
+            <h2 className="text-2xl font-bold mb-2 text-white">Tell us about yourself</h2>
+            <p className="text-gray-400 mb-6">Basic information for your profile</p>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Enter your full name"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Enter your email"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Category</label>
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
-                  <option value="">Select a category</option>
+                  <option value="" className="bg-gray-800">Select a category</option>
                   {categories.map((category) => (
-                    <option key={category} value={category}>{category}</option>
+                    <option key={category} value={category} className="bg-gray-800">{category}</option>
                   ))}
                 </select>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Bio</label>
                 <textarea
                   value={formData.bio}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Tell your audience about yourself..."
                   maxLength={500}
                 />
@@ -177,17 +186,17 @@ export default function HostSignupPage() {
         {/* Step 3: AI Assistant Setup */}
         {step === 3 && (
           <div>
-            <h2 className="text-2xl font-bold mb-2">Setup Your AI Assistant</h2>
-            <p className="text-gray-600 mb-6">Configure your virtual assistant to help manage interactions</p>
+            <h2 className="text-2xl font-bold mb-2 text-white">Setup Your AI Assistant</h2>
+            <p className="text-gray-400 mb-6">Configure your virtual assistant to help manage interactions</p>
             
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Assistant Persona</label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Assistant Persona</label>
                 <textarea
                   value={formData.assistantPersona}
                   onChange={(e) => setFormData({ ...formData, assistantPersona: e.target.value })}
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   placeholder="Describe how you want your AI assistant to communicate (tone, personality, style)..."
                   maxLength={500}
                 />
@@ -195,7 +204,7 @@ export default function HostSignupPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">Engagement Level</label>
+                <label className="block text-sm font-medium text-gray-300 mb-3">Engagement Level</label>
                 <div className="space-y-3">
                   {engagementLevels.map((level) => (
                     <button
@@ -203,12 +212,12 @@ export default function HostSignupPage() {
                       onClick={() => setFormData({ ...formData, engagementLevel: level.id })}
                       className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
                         formData.engagementLevel === level.id 
-                          ? 'border-purple-500 bg-purple-50' 
-                          : 'border-gray-200 bg-white'
+                          ? 'border-purple-500 bg-purple-500/10' 
+                          : 'border-gray-700 bg-gray-800'
                       }`}
                     >
-                      <h3 className="font-semibold mb-1">{level.title}</h3>
-                      <p className="text-sm text-gray-600">{level.description}</p>
+                      <h3 className="font-semibold mb-1 text-white">{level.title}</h3>
+                      <p className="text-sm text-gray-400">{level.description}</p>
                     </button>
                   ))}
                 </div>
@@ -220,70 +229,70 @@ export default function HostSignupPage() {
         {/* Step 4: Pricing */}
         {step === 4 && (
           <div>
-            <h2 className="text-2xl font-bold mb-2">Set Your Pricing</h2>
-            <p className="text-gray-600 mb-6">Configure subscription tiers for your subscribers</p>
+            <h2 className="text-2xl font-bold mb-2 text-white">Set Your Pricing</h2>
+            <p className="text-gray-400 mb-6">Configure subscription tiers for your subscribers</p>
             
             <div className="space-y-6">
-              <div className="bg-white rounded-xl p-4 border border-gray-200">
+              <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
                 <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <i className="ri-user-line text-gray-600"></i>
+                  <div className="w-8 h-8 bg-gray-700 rounded-lg flex items-center justify-center">
+                    <i className="ri-user-line text-gray-300"></i>
                   </div>
                   <div>
-                    <h3 className="font-semibold">Tier 1 - Basic</h3>
-                    <p className="text-sm text-gray-600">Limited replies, weekly broadcasts</p>
+                    <h3 className="font-semibold text-white">Tier 1 - Basic</h3>
+                    <p className="text-sm text-gray-400">Limited replies, weekly broadcasts</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-lg font-bold">$</span>
+                  <span className="text-lg font-bold text-white">$</span>
                   <input
                     type="number"
                     value={formData.tier1Price}
                     onChange={(e) => setFormData({ ...formData, tier1Price: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="9.99"
                     step="0.01"
                   />
-                  <span className="text-gray-600">/month</span>
+                  <span className="text-gray-400">/month</span>
                 </div>
               </div>
               
-              <div className="bg-white rounded-xl p-4 border border-purple-200">
+              <div className="bg-gray-800 rounded-xl p-4 border border-purple-500/30">
                 <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <i className="ri-vip-line text-purple-600"></i>
+                  <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                    <i className="ri-vip-line text-purple-400"></i>
                   </div>
                   <div>
-                    <h3 className="font-semibold">Tier 2 - Pro</h3>
-                    <p className="text-sm text-gray-600">Occasional 1:1 access, monthly AMAs</p>
+                    <h3 className="font-semibold text-white">Tier 2 - Pro</h3>
+                    <p className="text-sm text-gray-400">Occasional 1:1 access, monthly AMAs</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-lg font-bold">$</span>
+                  <span className="text-lg font-bold text-white">$</span>
                   <input
                     type="number"
                     value={formData.tier2Price}
                     onChange={(e) => setFormData({ ...formData, tier2Price: e.target.value })}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                     placeholder="19.99"
                     step="0.01"
                   />
-                  <span className="text-gray-600">/month</span>
+                  <span className="text-gray-400">/month</span>
                 </div>
               </div>
               
-              <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-4 text-white">
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-4">
                 <div className="flex items-center space-x-3 mb-3">
                   <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                     <i className="ri-vip-crown-line text-white"></i>
                   </div>
                   <div>
-                    <h3 className="font-semibold">Tier 3 - VIP</h3>
+                    <h3 className="font-semibold text-white">Tier 3 - VIP</h3>
                     <p className="text-sm text-purple-100">Premium messaging, personalized attention</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-lg font-bold">$</span>
+                  <span className="text-lg font-bold text-white">$</span>
                   <input
                     type="number"
                     value={formData.tier3Price}
@@ -301,12 +310,12 @@ export default function HostSignupPage() {
       </main>
 
       {/* Bottom Actions */}
-      <div className="fixed bottom-0 w-full bg-white border-t border-gray-200 px-4 py-4">
+      <div className="fixed bottom-0 w-full bg-gray-800 border-t border-gray-700 px-4 py-4">
         <div className="flex space-x-3">
           {step > 1 && (
             <button
               onClick={handleBack}
-              className="flex-1 py-3 border border-gray-300 rounded-lg font-medium text-gray-700"
+              className="flex-1 py-3 border border-gray-600 rounded-lg font-medium text-gray-300 hover:bg-gray-700"
             >
               Back
             </button>

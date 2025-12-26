@@ -1,11 +1,9 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function MessagesPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
 
   const conversations = [
@@ -76,11 +74,7 @@ export default function MessagesPage() {
   };
 
   const handleConversationClick = (id: number) => {
-    setSelectedConversation(id);
-    setShowSuggestions(true);
-    setTimeout(() => {
-      navigate(`/chat/${id}`);
-    }, 1500);
+    navigate(`/chat/${id}`);
   };
 
   return (
@@ -140,46 +134,6 @@ export default function MessagesPage() {
           </button>
         </div>
       </div>
-
-      {/* AI Suggestions Overlay */}
-      {showSuggestions && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-end">
-          <div className="w-full bg-white dark:bg-gray-800 rounded-t-2xl p-4 animate-slide-up">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">AI Suggestions</h3>
-              <button 
-                onClick={() => setShowSuggestions(false)}
-                className="w-8 h-8 flex items-center justify-center"
-              >
-                <i className="ri-close-line text-gray-600 dark:text-gray-400 text-lg"></i>
-              </button>
-            </div>
-            <div className="space-y-2 mb-4">
-              {aiSuggestions.map((suggestion, index) => (
-                <button
-                  key={index}
-                  onClick={() => setShowSuggestions(false)}
-                  className="w-full p-3 text-left bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                >
-                  <p className="text-gray-900 dark:text-white">{suggestion}</p>
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
-              <div className="flex items-center space-x-2">
-                <i className="ri-robot-line text-purple-600 dark:text-purple-400"></i>
-                <span className="text-sm text-purple-600 dark:text-purple-400">AI Assistant Active</span>
-              </div>
-              <button 
-                onClick={() => navigate('/settings')}
-                className="text-sm text-purple-600 dark:text-purple-400 font-medium"
-              >
-                Customize
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Messages List */}
       <main className="pt-32 pb-20">

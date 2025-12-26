@@ -1,10 +1,16 @@
-
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isCreator, setIsCreator] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.enableCreatorMode) {
+      setIsCreator(true);
+    }
+  }, [location.state]);
 
   const userStats = {
     subscriptions: 3,
@@ -14,13 +20,13 @@ export default function ProfilePage() {
   };
 
   const menuItems = [
-    { icon: 'ri-user-settings-line', title: 'Account Settings', subtitle: 'Personal information and preferences' },
-    { icon: 'ri-notification-line', title: 'Notifications', subtitle: 'Manage your notification preferences' },
-    { icon: 'ri-shield-check-line', title: 'Privacy & Security', subtitle: 'Control your privacy settings' },
-    { icon: 'ri-credit-card-line', title: 'Payment Methods', subtitle: 'Manage billing and payments' },
+    { icon: 'ri-user-settings-line', title: 'Account Settings', subtitle: 'Personal information and preferences', action: () => navigate('/account-settings') },
+    { icon: 'ri-notification-line', title: 'Notifications', subtitle: 'Manage your notification preferences', action: () => navigate('/notifications') },
+    { icon: 'ri-shield-check-line', title: 'Privacy & Security', subtitle: 'Control your privacy settings', action: () => navigate('/privacy-security') },
+    { icon: 'ri-credit-card-line', title: 'Payment Methods', subtitle: 'Manage billing and payments', action: () => navigate('/payment-methods') },
     { icon: 'ri-settings-3-line', title: 'AI Settings', subtitle: 'Customize your AI assistant', action: () => navigate('/settings') },
-    { icon: 'ri-question-line', title: 'Help & Support', subtitle: 'Get help and contact support' },
-    { icon: 'ri-information-line', title: 'About', subtitle: 'App version and legal information' }
+    { icon: 'ri-question-line', title: 'Help & Support', subtitle: 'Get help and contact support', action: () => navigate('/help-support') },
+    { icon: 'ri-information-line', title: 'About', subtitle: 'App version and legal information', action: () => navigate('/about') }
   ];
 
   return (
@@ -70,7 +76,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols=2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div className="text-center">
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{userStats.subscriptions}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Active Subscriptions</p>
@@ -96,7 +102,10 @@ export default function ProfilePage() {
                 <i className="ri-dashboard-line text-lg mb-2 block"></i>
                 <span className="text-sm font-medium">Dashboard</span>
               </button>
-              <button className="bg-white/20 rounded-lg p-3 text-left">
+              <button 
+                onClick={() => navigate('/settings')}
+                className="bg-white/20 rounded-lg p-3 text-left"
+              >
                 <i className="ri-robot-line text-lg mb-2 block"></i>
                 <span className="text-sm font-medium">AI Assistant</span>
               </button>
@@ -130,7 +139,10 @@ export default function ProfilePage() {
 
         {/* Sign Out */}
         <div className="mt-8">
-          <button className="w-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl p-4 font-medium border border-red-100 dark:border-red-800">
+          <button 
+            onClick={() => navigate('/host-signup')}
+            className="w-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl p-4 font-medium border border-red-100 dark:border-red-800"
+          >
             <i className="ri-logout-box-line mr-2"></i>
             Sign Out
           </button>

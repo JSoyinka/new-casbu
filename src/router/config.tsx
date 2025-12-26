@@ -1,4 +1,3 @@
-
 import { RouteObject } from 'react-router-dom';
 import { lazy } from 'react';
 
@@ -9,6 +8,13 @@ const SubscriptionsPage = lazy(() => import('../pages/subscriptions/page'));
 const ProfilePage = lazy(() => import('../pages/profile/page'));
 const HostSignupPage = lazy(() => import('../pages/host-signup/page'));
 const SettingsPage = lazy(() => import('../pages/settings/page'));
+const AccountSettingsPage = lazy(() => import('../pages/account-settings/page'));
+const NotificationsPage = lazy(() => import('../pages/notifications/page'));
+const PrivacySecurityPage = lazy(() => import('../pages/privacy-security/page'));
+const PaymentMethodsPage = lazy(() => import('../pages/payment-methods/page'));
+const HelpSupportPage = lazy(() => import('../pages/help-support/page'));
+const AboutPage = lazy(() => import('../pages/about/page'));
+const HostDashboardPage = lazy(() => import('../pages/host-dashboard/page'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 const routes: RouteObject[] = [
@@ -39,6 +45,34 @@ const routes: RouteObject[] = [
   {
     path: '/settings',
     element: <SettingsPage />
+  },
+  {
+    path: '/account-settings',
+    element: <AccountSettingsPage />
+  },
+  {
+    path: '/notifications',
+    element: <NotificationsPage />
+  },
+  {
+    path: '/privacy-security',
+    element: <PrivacySecurityPage />
+  },
+  {
+    path: '/payment-methods',
+    element: <PaymentMethodsPage />
+  },
+  {
+    path: '/help-support',
+    element: <HelpSupportPage />
+  },
+  {
+    path: '/about',
+    element: <AboutPage />
+  },
+  {
+    path: '/host-dashboard',
+    element: <HostDashboardPage />
   },
   {
     path: '*',

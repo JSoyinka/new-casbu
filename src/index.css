@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Force dark mode by default */
+:root {
+  color-scheme: dark;
+}
+
+/* Removed invalid @apply of the dark variant */
+html {
+  /* The dark mode class is applied via JavaScript instead of @apply */
+}
+
+/* Body styling for dark mode */
+body {
+  @apply bg-gray-900 text-white;
+}

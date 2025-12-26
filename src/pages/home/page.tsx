@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -70,7 +69,7 @@ export default function HomePage() {
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
                 <i className="ri-heart-line text-white text-lg"></i>
               </div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Pacifico, serif' }}>CreatorConnect</h1>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Pacifico, serif' }}>Casbu Connect</h1>
             </div>
             <div className="flex items-center space-x-3">
               <button className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
@@ -187,7 +186,7 @@ export default function HomePage() {
               <div key={creator.id} className="group relative">
                 <div className="bg-white dark:bg-gray-800 rounded-3xl p-5 shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 group-hover:scale-[1.02]">
                   {/* Background Gradient */}
-                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${creator.gradient} rounded-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
+                  <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${creator.gradient} rounded-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
                   
                   <div className="relative flex items-start space-x-4">
                     <div className="relative">
