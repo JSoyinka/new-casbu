@@ -1,6 +1,6 @@
 {
-  "name": "Casbu Connect - Connect with Your Favorite Creators",
-  "short_name": "Casbu Connect",
+  "name": "Direct Line - Connect with Your Favorite Creators",
+  "short_name": "Direct Line",
   "description": "A platform for creators and subscribers to connect through tiered subscriptions and personalized interactions",
   "start_url": "/",
   "display": "standalone",

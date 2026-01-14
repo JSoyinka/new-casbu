@@ -34,7 +34,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white dark:bg-gray-800 shadow-sm z-50 border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 left-0 right-0 w-full bg-white dark:bg-gray-800 shadow-sm z-50 border-b border-gray-200 dark:border-gray-700">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <button 
@@ -56,7 +56,7 @@ export default function AboutPage() {
           <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <span className="text-3xl font-bold" style={{ fontFamily: '"Pacifico", serif' }}>CC</span>
           </div>
-          <h2 className="text-2xl font-bold mb-2">Casbu Connect</h2>
+          <h2 className="text-2xl font-bold mb-2">Direct Line</h2>
           <p className="text-purple-100 mb-4">Connecting creators with their biggest fans</p>
           <div className="inline-block bg-white/20 px-4 py-2 rounded-full text-sm">
             Version {appInfo.version}
@@ -67,7 +67,7 @@ export default function AboutPage() {
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Our Mission</h2>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            Casbu Connect empowers creators to build meaningful relationships with their audience through exclusive content, 
+            Direct Line empowers creators to build meaningful relationships with their audience through exclusive content, 
             direct messaging, and AI-powered engagement tools. We believe in putting creators first and giving them the tools 
             they need to succeed.
           </p>
@@ -166,7 +166,7 @@ export default function AboutPage() {
           <i className="ri-heart-fill text-3xl mb-3 block"></i>
           <h3 className="font-semibold mb-2">Made with love for creators</h3>
           <p className="text-sm text-purple-100">
-            © 2024 Casbu Connect. All rights reserved.
+            © 2024 Direct Line. All rights reserved.
           </p>
         </div>
       </main>

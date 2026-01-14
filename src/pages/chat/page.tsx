@@ -376,52 +376,29 @@ export default function ChatPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-sm z-[100] border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm z-[100] border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
+            <button 
+              onClick={() => navigate('/messages')} 
+              className="w-8 h-8 flex items-center justify-center"
+            >
+              <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400 text-lg"></i>
+            </button>
             <div className="flex items-center space-x-3">
-              <button 
-                onClick={() => navigate('/messages')}
-                className="w-8 h-8 flex items-center justify-center"
-              >
-                <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400 text-lg"></i>
-              </button>
-              
-              <div className="flex items-center space-x-3">
-                <div className="relative">
-                  <img 
-                    src={creator.image} 
-                    alt={creator.name}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                  {creator.isOnline && (
-                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
-                  )}
-                </div>
-                
-                <div>
-                  <div className="flex items-center space-x-2">
-                    <h1 className="font-semibold text-gray-900 dark:text-white">{creator.name}</h1>
-                    <span className={`text-xs px-2 py-1 rounded-full ${getTierColor(creator.tier)}`}>
-                      {creator.tier}
-                    </span>
-                  </div>
-                  <p className="text-xs text-green-500">{creator.isOnline ? 'Online now' : 'Offline'}</p>
-                </div>
+              <img 
+                src={creator?.image || 'https://readdy.ai/api/search-image?query=Professional%20portrait%20placeholder&width=100&height=100&seq=placeholder1&orientation=squarish'} 
+                alt={creator?.name || 'Creator'}
+                className="w-8 h-8 rounded-full object-cover"
+              />
+              <div>
+                <h1 className="text-sm font-bold text-gray-900 dark:text-white">{creator?.name || 'Creator'}</h1>
+                <p className="text-xs text-green-500 dark:text-green-400">Online</p>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-2">
-              <button 
-                onClick={() => setShowSummary(true)}
-                className="w-8 h-8 flex items-center justify-center"
-              >
-                <i className="ri-file-text-line text-gray-600 dark:text-gray-400 text-lg"></i>
-              </button>
-              <button className="w-8 h-8 flex items-center justify-center">
-                <i className="ri-more-line text-gray-600 dark:text-gray-400 text-lg"></i>
-              </button>
-            </div>
+            <button className="w-8 h-8 flex items-center justify-center">
+              <i className="ri-more-2-line text-gray-600 dark:text-gray-400 text-lg"></i>
+            </button>
           </div>
         </div>
       </header>

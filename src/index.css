@@ -7,11 +7,11 @@
   color-scheme: dark;
 }
 
-/* Removed invalid @apply of the dark variant */
-html {
-  /* The dark mode class is applied via JavaScript instead of @apply */
-}
-
+/* Removed invalid @apply of the `dark` class.
+   The dark mode is now enabled via JavaScript (App.tsx) which adds the `dark`
+   class to the <html> element on load. Tailwind will automatically apply
+   dark‑mode styles using the `dark:` prefix in component classes. */
+ 
 /* Body styling for dark mode */
 body {
   @apply bg-gray-900 text-white;

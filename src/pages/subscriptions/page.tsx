@@ -69,15 +69,15 @@ export default function SubscriptionsPage() {
       <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm z-[100] border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">My Subscriptions</h1>
-            <div className="flex items-center space-x-2">
-              <button className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
-                <i className="ri-notification-line text-gray-600 dark:text-gray-400 text-lg"></i>
-              </button>
-              <button className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
-                <i className="ri-more-line text-gray-600 dark:text-gray-400 text-lg"></i>
-              </button>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <i className="ri-circuit-line text-white text-lg"></i>
+              </div>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '-0.02em' }}>Direct Line</h1>
             </div>
+            <button className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
+              <i className="ri-search-line text-gray-600 dark:text-gray-400 text-lg"></i>
+            </button>
           </div>
         </div>
       </header>

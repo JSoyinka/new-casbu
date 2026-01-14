@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function AccountSettingsPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     firstName: 'John',
     lastName: 'Doe',
@@ -16,19 +19,64 @@ export default function AccountSettingsPage() {
 
   const [isEditing, setIsEditing] = useState(false);
 
+  // Load user data from Supabase
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (!user?.id) return;
+      
+      const { data } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      if (data) {
+        setFormData({
+          firstName: data.first_name || 'John',
+          lastName: data.last_name || 'Doe',
+          email: data.email || 'john.doe@email.com',
+          phone: data.phone || '+1 (555) 123-4567',
+          username: data.username || '@johndoe',
+          bio: data.bio || 'Fitness enthusiast and tech lover. Always looking to connect with amazing creators!',
+          location: data.location || 'San Francisco, CA',
+          birthday: data.date_of_birth || '1995-06-15'
+        });
+      }
+    };
+    
+    loadUserData();
+  }, [user]);
+
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsEditing(false);
-    // Save logic here
+    
+    // Save to Supabase
+    if (user?.id) {
+      await supabase
+        .from('users')
+        .update({
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          username: formData.username,
+          bio: formData.bio,
+          location: formData.location,
+          date_of_birth: formData.birthday,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', user.id);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white dark:bg-gray-800 shadow-sm z-50 border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 left-0 right-0 w-full bg-white dark:bg-gray-800 shadow-sm z-[100] border-b border-gray-200 dark:border-gray-700">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <button 
@@ -38,12 +86,21 @@ export default function AccountSettingsPage() {
               <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400 text-lg"></i>
             </button>
             <h1 className="text-xl font-bold text-gray-900 dark:text-white">Account Settings</h1>
-            <button 
-              onClick={() => isEditing ? handleSave() : setIsEditing(true)}
-              className="text-purple-600 dark:text-purple-400 font-medium text-sm"
-            >
-              {isEditing ? 'Save' : 'Edit'}
-            </button>
+            {isEditing ? (
+              <button 
+                onClick={handleSave}
+                className="text-blue-600 dark:text-blue-400 font-medium text-sm"
+              >
+                Save
+              </button>
+            ) : (
+              <button 
+                onClick={() => setIsEditing(true)}
+                className="text-blue-600 dark:text-blue-400 font-medium text-sm"
+              >
+                Edit
+              </button>
+            )}
           </div>
         </div>
       </header>
@@ -54,11 +111,13 @@ export default function AccountSettingsPage() {
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-4">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Profile Photo</h2>
           <div className="flex items-center space-x-4">
-            <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">JD</span>
+            <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+              <span className="text-white text-2xl font-bold">
+                {formData.firstName.charAt(0)}{formData.lastName.charAt(0)}
+              </span>
             </div>
             <div className="flex-1">
-              <button className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium mb-2 w-full">
+              <button className="bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium mb-2 w-full">
                 Change Photo
               </button>
               <button className="text-red-600 dark:text-red-400 text-sm font-medium">

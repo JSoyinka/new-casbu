@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { isDemoUser } = useAuth();
   const [activeTab, setActiveTab] = useState('discover');
 
   const featuredCreators = [
@@ -66,10 +68,10 @@ export default function HomePage() {
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
-                <i className="ri-heart-line text-white text-lg"></i>
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <i className="ri-circuit-line text-white text-lg"></i>
               </div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Pacifico, serif' }}>Casbu Connect</h1>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '-0.02em' }}>Direct Line</h1>
             </div>
             <div className="flex items-center space-x-3">
               <button className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
@@ -81,7 +83,7 @@ export default function HomePage() {
               </button>
               <button 
                 onClick={() => navigate('/profile')}
-                className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+                className="w-10 h-10 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-xl flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
               >
                 <i className="ri-user-line text-white text-sm"></i>
               </button>
@@ -93,7 +95,7 @@ export default function HomePage() {
       {/* Main Content */}
       <main className="pt-16 pb-20">
         {/* Hero Section with Animated Background */}
-        <div className="relative px-4 py-8 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white overflow-hidden">
+        <div className="relative px-4 py-8 bg-gradient-to-br from-blue-500 via-blue-700 to-purple-600 text-white overflow-hidden">
           {/* Animated Background Elements */}
           <div className="absolute inset-0 opacity-20">
             <div className="absolute top-10 left-10 w-20 h-20 bg-white rounded-full animate-pulse"></div>
@@ -104,7 +106,7 @@ export default function HomePage() {
           
           <div className="relative z-10">
             <h2 className="text-3xl font-bold mb-3 animate-fade-in">Connect with Amazing Creators</h2>
-            <p className="text-purple-100 mb-6 text-lg">Get exclusive access to your favorite influencers and experts</p>
+            <p className="text-blue-100 mb-6 text-lg">Get exclusive access to your favorite influencers and experts</p>
             <div className="flex space-x-3">
               <button 
                 onClick={() => navigate('/host-signup')}
@@ -112,7 +114,7 @@ export default function HomePage() {
               >
                 Become a Creator
               </button>
-              <button className="bg-white text-purple-600 px-6 py-3 rounded-2xl font-medium hover:scale-105 transition-transform shadow-lg">
+              <button className="bg-white text-blue-600 px-6 py-3 rounded-2xl font-medium hover:scale-105 transition-transform shadow-lg">
                 Explore Now
               </button>
             </div>
@@ -165,7 +167,7 @@ export default function HomePage() {
                   <p className="text-xs text-gray-500 dark:text-gray-400">{category.count} creators</p>
                   
                   {/* Hover Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               </div>
             ))}
@@ -176,7 +178,7 @@ export default function HomePage() {
         <div className="px-4 py-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Featured Creators</h3>
-            <button className="text-purple-600 dark:text-purple-400 text-sm font-medium flex items-center space-x-1 hover:scale-105 transition-transform">
+            <button className="text-blue-600 dark:text-blue-400 text-sm font-medium flex items-center space-x-1 hover:scale-105 transition-transform">
               <span>View All</span>
               <i className="ri-arrow-right-line"></i>
             </button>
@@ -184,7 +186,10 @@ export default function HomePage() {
           <div className="space-y-4">
             {featuredCreators.map((creator, index) => (
               <div key={creator.id} className="group relative">
-                <div className="bg-white dark:bg-gray-800 rounded-3xl p-5 shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 group-hover:scale-[1.02]">
+                <div 
+                  onClick={() => navigate(`/creator/${creator.id}`)}
+                  className="bg-white dark:bg-gray-800 rounded-3xl p-5 shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 group-hover:scale-[1.02] cursor-pointer"
+                >
                   {/* Background Gradient */}
                   <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${creator.gradient} rounded-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
                   
@@ -203,9 +208,9 @@ export default function HomePage() {
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <h4 className="font-bold text-lg text-gray-900 dark:text-white">{creator.name}</h4>
-                        <div className="flex items-center space-x-1 bg-purple-100 dark:bg-purple-900/30 px-3 py-1 rounded-full">
-                          <i className="ri-user-line text-purple-600 dark:text-purple-400 text-xs"></i>
-                          <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
+                        <div className="flex items-center space-x-1 bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-full">
+                          <i className="ri-user-line text-blue-600 dark:text-blue-400 text-xs"></i>
+                          <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
                             {creator.subscribers}
                           </span>
                         </div>
@@ -216,20 +221,29 @@ export default function HomePage() {
                       {/* Subscription Tiers with Modern Design */}
                       <div className="grid grid-cols-3 gap-2">
                         <button 
-                          onClick={() => navigate(`/creator/${creator.id}/subscribe?tier=1`)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/creator/${creator.id}`);
+                          }}
                           className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform"
                         >
                           Basic ${creator.tier1Price}
                         </button>
                         <button 
-                          onClick={() => navigate(`/creator/${creator.id}/subscribe?tier=2`)}
-                          className="bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/creator/${creator.id}`);
+                          }}
+                          className="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform"
                         >
                           Pro ${creator.tier2Price}
                         </button>
                         <button 
-                          onClick={() => navigate(`/creator/${creator.id}/subscribe?tier=3`)}
-                          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform shadow-lg"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/creator/${creator.id}`);
+                          }}
+                          className="bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 text-white py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform shadow-lg"
                         >
                           VIP ${creator.tier3Price}
                         </button>
@@ -277,7 +291,7 @@ export default function HomePage() {
             onClick={() => setActiveTab('discover')}
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${
               activeTab === 'discover' 
-                ? 'text-purple-600 dark:text-purple-400 scale-110' 
+                ? 'text-blue-600 dark:text-blue-400 scale-110' 
                 : 'text-gray-400 dark:text-gray-500'
             }`}
           >
@@ -291,7 +305,7 @@ export default function HomePage() {
             }}
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${
               activeTab === 'messages' 
-                ? 'text-purple-600 dark:text-purple-400 scale-110' 
+                ? 'text-blue-600 dark:text-blue-400 scale-110' 
                 : 'text-gray-400 dark:text-gray-500'
             }`}
           >
@@ -305,7 +319,7 @@ export default function HomePage() {
             }}
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${
               activeTab === 'subscriptions' 
-                ? 'text-purple-600 dark:text-purple-400 scale-110' 
+                ? 'text-blue-600 dark:text-blue-400 scale-110' 
                 : 'text-gray-400 dark:text-gray-500'
             }`}
           >
@@ -319,7 +333,7 @@ export default function HomePage() {
             }}
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${
               activeTab === 'profile' 
-                ? 'text-purple-600 dark:text-purple-400 scale-110' 
+                ? 'text-blue-600 dark:text-blue-400 scale-110' 
                 : 'text-gray-400 dark:text-gray-500'
             }`}
           >

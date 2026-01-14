@@ -1,22 +1,49 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { signOut } from '../../lib/supabase';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { profile, isDemoUser, loading } = useAuth();
   const [isCreator, setIsCreator] = useState(false);
 
   useEffect(() => {
+    if (profile?.is_creator) {
+      setIsCreator(true);
+    }
     if (location.state?.enableCreatorMode) {
       setIsCreator(true);
     }
-  }, [location.state]);
+  }, [location.state, profile]);
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   const userStats = {
     subscriptions: 3,
     totalSpent: 92.97,
     messagesThisMonth: 12,
     joinDate: 'January 2024'
+  };
+
+  const demoUserData = {
+    name: 'John Doe',
+    email: 'john.doe@email.com',
+    initials: 'JD'
+  };
+
+  const currentUser = isDemoUser ? demoUserData : {
+    name: profile?.full_name || 'User',
+    email: profile?.email || '',
+    initials: profile?.full_name?.split(' ').map(n => n[0]).join('') || 'U'
   };
 
   const menuItems = [
@@ -29,15 +56,31 @@ export default function ProfilePage() {
     { icon: 'ri-information-line', title: 'About', subtitle: 'App version and legal information', action: () => navigate('/about') }
   ];
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm z-[100] border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Profile</h1>
-            <button className="w-8 h-8 flex items-center justify-center">
-              <i className="ri-more-line text-gray-600 dark:text-gray-400 text-lg"></i>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <i className="ri-circuit-line text-white text-lg"></i>
+              </div>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '-0.02em' }}>Direct Line</h1>
+            </div>
+            <button 
+              onClick={() => navigate('/settings')}
+              className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform"
+            >
+              <i className="ri-settings-3-line text-gray-600 dark:text-gray-400 text-lg"></i>
             </button>
           </div>
         </div>
@@ -47,42 +90,49 @@ export default function ProfilePage() {
       <div className="pt-20 px-4 pb-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
           <div className="flex items-center space-x-4 mb-6">
-            <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">JD</span>
+            <div className="w-20 h-20 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-full flex items-center justify-center">
+              <span className="text-white text-2xl font-bold">{currentUser.initials}</span>
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">John Doe</h2>
-              <p className="text-gray-600 dark:text-gray-400">john.doe@email.com</p>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{currentUser.name}</h2>
+              <p className="text-gray-600 dark:text-gray-400">{currentUser.email}</p>
               <p className="text-sm text-gray-500 dark:text-gray-500">Member since {userStats.joinDate}</p>
             </div>
           </div>
 
           {/* Creator Toggle */}
-          <div className="flex items-center justify-between p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg mb-4">
-            <div>
-              <h3 className="font-semibold text-purple-900 dark:text-purple-300">Creator Mode</h3>
-              <p className="text-sm text-purple-600 dark:text-purple-400">Switch to creator dashboard</p>
+          {(profile?.is_creator || isDemoUser) && (
+            <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg mb-4">
+              <div>
+                <h3 className="font-semibold text-blue-900 dark:text-blue-300">Creator Mode</h3>
+                <p className="text-sm text-blue-600 dark:text-blue-400">Switch to creator dashboard</p>
+              </div>
+              <button
+                onClick={() => {
+                  setIsCreator(!isCreator);
+                  if (!isCreator) {
+                    navigate('/subscribers');
+                  }
+                }}
+                className={`w-12 h-6 rounded-full transition-colors ${
+                  isCreator ? 'bg-blue-500' : 'bg-gray-300 dark:bg-gray-600'
+                }`}
+              >
+                <div className={`w-5 h-5 bg-white rounded-full transition-transform ${
+                  isCreator ? 'translate-x-6' : 'translate-x-0.5'
+                }`}></div>
+              </button>
             </div>
-            <button
-              onClick={() => setIsCreator(!isCreator)}
-              className={`w-12 h-6 rounded-full transition-colors ${
-                isCreator ? 'bg-purple-500' : 'bg-gray-300 dark:bg-gray-600'
-              }`}
-            >
-              <div className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                isCreator ? 'translate-x-6' : 'translate-x-0.5'
-              }`}></div>
-            </button>
-          </div>
+          )}
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center">
-              <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{userStats.subscriptions}</p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{userStats.subscriptions}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Active Subscriptions</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">${userStats.totalSpent}</p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">${userStats.totalSpent}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total Spent</p>
             </div>
           </div>
@@ -92,7 +142,7 @@ export default function ProfilePage() {
       {/* Creator Actions */}
       {isCreator && (
         <div className="px-4 pb-6">
-          <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-4 text-white">
+          <div className="bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-xl p-4 text-white">
             <h3 className="font-semibold mb-3">Creator Dashboard</h3>
             <div className="grid grid-cols-2 gap-3">
               <button 
@@ -140,7 +190,7 @@ export default function ProfilePage() {
         {/* Sign Out */}
         <div className="mt-8">
           <button 
-            onClick={() => navigate('/host-signup')}
+            onClick={handleLogout}
             className="w-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl p-4 font-medium border border-red-100 dark:border-red-800"
           >
             <i className="ri-logout-box-line mr-2"></i>
@@ -167,13 +217,13 @@ export default function ProfilePage() {
             <span className="text-xs">Messages</span>
           </button>
           <button 
-            onClick={() => navigate('/subscriptions')}
+            onClick={() => navigate(isCreator ? '/subscribers' : '/subscriptions')}
             className="flex flex-col items-center justify-center space-y-1 text-gray-400 dark:text-gray-500"
           >
-            <i className="ri-vip-crown-line text-lg"></i>
-            <span className="text-xs">Subscriptions</span>
+            <i className={isCreator ? 'ri-user-heart-line text-lg' : 'ri-vip-crown-line text-lg'}></i>
+            <span className="text-xs">{isCreator ? 'Subscribers' : 'Subscriptions'}</span>
           </button>
-          <button className="flex flex-col items-center justify-center space-y-1 text-purple-600 dark:text-purple-400">
+          <button className="flex flex-col items-center justify-center space-y-1 text-blue-600 dark:text-blue-400">
             <i className="ri-user-line text-lg"></i>
             <span className="text-xs">Profile</span>
           </button>
