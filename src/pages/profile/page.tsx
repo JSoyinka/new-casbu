@@ -6,7 +6,7 @@ import { signOut } from '../../lib/supabase';
 export default function ProfilePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { profile, isDemoUser, loading } = useAuth();
+  const { profile, isDemoUser, loading, setDemoUser } = useAuth();
   const [isCreator, setIsCreator] = useState(false);
 
   useEffect(() => {
@@ -20,17 +20,26 @@ export default function ProfilePage() {
 
   const handleLogout = async () => {
     try {
-      await signOut();
+      if (!isDemoUser) {
+        // For real users, sign out from Supabase
+        await signOut();
+      }
+      // Reset demo state and navigate to login
+      setDemoUser(false);
       navigate('/login');
     } catch (error) {
       console.error('Error signing out:', error);
+      // Even if there's an error, navigate to login
+      setDemoUser(false);
+      navigate('/login');
     }
   };
 
+  // Use demo data for demo users, zero out for authenticated users
   const userStats = {
-    subscriptions: 3,
-    totalSpent: 92.97,
-    messagesThisMonth: 12,
+    subscriptions: isDemoUser ? 3 : 0,
+    totalSpent: isDemoUser ? 92.97 : 0,
+    messagesThisMonth: isDemoUser ? 12 : 0,
     joinDate: 'January 2024'
   };
 
@@ -70,15 +79,17 @@ export default function ProfilePage() {
       <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm z-[100] border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <i className="ri-circuit-line text-white text-lg"></i>
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-lg flex items-center justify-center">
+                <i className="ri-cpu-line text-white text-sm"></i>
               </div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '-0.02em' }}>Direct Line</h1>
+              <h1 className="text-lg font-bold text-gray-900 dark:text-white" style={{ fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}>
+                DirectLine
+              </h1>
             </div>
             <button 
               onClick={() => navigate('/settings')}
-              className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform"
+              className="w-8 h-8 flex items-center justify-center"
             >
               <i className="ri-settings-3-line text-gray-600 dark:text-gray-400 text-lg"></i>
             </button>
@@ -132,7 +143,7 @@ export default function ProfilePage() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Active Subscriptions</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">${userStats.totalSpent}</p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">${userStats.totalSpent.toFixed(2)}</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">Total Spent</p>
             </div>
           </div>

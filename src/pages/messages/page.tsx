@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function MessagesPage() {
   const navigate = useNavigate();
+  const { isDemoUser } = useAuth();
   const [activeTab, setActiveTab] = useState('all');
   const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
 
@@ -57,7 +59,10 @@ export default function MessagesPage() {
     "Looking forward to our next session!"
   ];
 
-  const filteredConversations = conversations.filter(conv => {
+  // Only show conversations for demo users
+  const displayedConversations = isDemoUser ? conversations : [];
+
+  const filteredConversations = displayedConversations.filter(conv => {
     if (activeTab === 'all') return true;
     if (activeTab === 'personal') return !conv.isAI;
     if (activeTab === 'ai') return conv.isAI;
@@ -83,14 +88,19 @@ export default function MessagesPage() {
       <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm z-[100] border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <i className="ri-circuit-line text-white text-lg"></i>
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-lg flex items-center justify-center">
+                <i className="ri-cpu-line text-white text-sm"></i>
               </div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '-0.02em' }}>Direct Line</h1>
+              <h1 className="text-lg font-bold text-gray-900 dark:text-white" style={{ fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}>
+                DirectLine
+              </h1>
             </div>
-            <button className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
-              <i className="ri-search-line text-gray-600 dark:text-gray-400 text-lg"></i>
+            <button 
+              onClick={() => navigate('/settings')}
+              className="w-8 h-8 flex items-center justify-center"
+            >
+              <i className="ri-settings-3-line text-gray-600 dark:text-gray-400 text-lg"></i>
             </button>
           </div>
         </div>
@@ -137,14 +147,14 @@ export default function MessagesPage() {
         <div className="px-4">
           {filteredConversations.length === 0 ? (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="ri-message-3-line text-gray-400 dark:text-gray-600 text-2xl"></i>
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i className="ri-message-3-line text-white text-2xl"></i>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No messages yet</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-6">Start a conversation with your favorite creators</p>
               <button 
                 onClick={() => navigate('/')}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-medium"
+                className="bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:scale-105 transition-transform shadow-lg"
               >
                 Discover Creators
               </button>
@@ -212,7 +222,7 @@ export default function MessagesPage() {
             <i className="ri-compass-line text-lg"></i>
             <span className="text-xs">Discover</span>
           </button>
-          <button className="flex flex-col items-center justify-center space-y-1 text-purple-600 dark:text-purple-400">
+          <button className="flex flex-col items-center justify-center space-y-1 text-blue-600 dark:text-blue-400">
             <i className="ri-message-3-line text-lg"></i>
             <span className="text-xs">Messages</span>
           </button>

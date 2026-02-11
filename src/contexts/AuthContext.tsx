@@ -32,51 +32,89 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isDemoUser, setIsDemoUser] = useState(true);
+  const [isDemoUser, setIsDemoUser] = useState(false);
 
   const refreshProfile = async () => {
     const currentUser = await getCurrentUser();
     if (currentUser) {
-      const userProfile = await getUserProfile(currentUser.id);
-      setProfile(userProfile);
+      try {
+        const userProfile = await getUserProfile(currentUser.id);
+        setProfile(userProfile);
+      } catch (error) {
+        console.error('Error refreshing profile:', error);
+      }
     }
   };
 
   useEffect(() => {
-    // Check active sessions
-    getCurrentUser().then((currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        setIsDemoUser(false);
-        getUserProfile(currentUser.id).then((userProfile) => {
-          setProfile(userProfile);
+    let mounted = true;
+
+    const initAuth = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        
+        if (!mounted) return;
+        
+        if (currentUser) {
+          // User is authenticated
+          setUser(currentUser);
+          setIsDemoUser(false);
+          
+          try {
+            const userProfile = await getUserProfile(currentUser.id);
+            if (mounted) {
+              setProfile(userProfile);
+            }
+          } catch (error) {
+            console.error('Error fetching profile:', error);
+          }
+        } else {
+          // No authenticated user - they will be set as demo user when accessing protected routes
+          setIsDemoUser(false);
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+      } finally {
+        if (mounted) {
           setLoading(false);
-        }).catch(() => {
-          setLoading(false);
-        });
-      } else {
-        setLoading(false);
+        }
       }
-    });
+    };
+
+    initAuth();
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+
+      console.log('Auth state changed:', event, session?.user?.email);
+
       setUser(session?.user ?? null);
+      
       if (session?.user) {
         setIsDemoUser(false);
         try {
           const userProfile = await getUserProfile(session.user.id);
-          setProfile(userProfile);
+          if (mounted) {
+            setProfile(userProfile);
+            console.log('Profile loaded:', userProfile);
+          }
         } catch (error) {
           console.error('Error fetching profile:', error);
         }
       } else {
         setProfile(null);
       }
-      setLoading(false);
+      
+      if (mounted) {
+        setLoading(false);
+      }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const setDemoUser = (isDemo: boolean) => {
@@ -85,6 +123,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(null);
       setProfile(null);
     }
+    // Always set loading to false when setting demo user
+    setLoading(false);
   };
 
   return (

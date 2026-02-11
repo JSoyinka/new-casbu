@@ -18,6 +18,7 @@ const PaymentMethodsPage = lazy(() => import('../pages/payment-methods/page'));
 const HelpSupportPage = lazy(() => import('../pages/help-support/page'));
 const AboutPage = lazy(() => import('../pages/about/page'));
 const HostDashboardPage = lazy(() => import('../pages/host-dashboard/page'));
+const ClaimPhoneNumberPage = lazy(() => import('../pages/claim-phone-number/page'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 const routes: RouteObject[] = [
@@ -88,6 +89,10 @@ const routes: RouteObject[] = [
   {
     path: '/host-dashboard',
     element: <HostDashboardPage />
+  },
+  {
+    path: '/claim-phone-number',
+    element: <ClaimPhoneNumberPage />
   },
   {
     path: '*',

@@ -16,11 +16,20 @@ export const signUp = async (email: string, password: string, userData: any) => 
     password,
   });
 
-  if (authError) throw authError;
+  if (authError) {
+    // Handle rate limit error with user-friendly message
+    if (authError.status === 429 || authError.message?.includes('rate_limit')) {
+      throw new Error('Too many signup attempts. Please wait a few minutes and try again.');
+    }
+    throw new Error(authError.message || 'Signup failed. Please try again.');
+  }
   if (!authData.user) throw new Error('No user returned from signup');
 
-  // Create user profile
-  const { error: profileError } = await supabase
+  // Wait a moment for auth to fully process
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  // Create user profile with proper auth_id
+  const { data: profileData, error: profileError } = await supabase
     .from('users')
     .insert({
       auth_id: authData.user.id,
@@ -33,11 +42,17 @@ export const signUp = async (email: string, password: string, userData: any) => 
       host_type: userData.host_type,
       assistant_persona: userData.assistant_persona,
       engagement_level: userData.engagement_level,
-    });
+    })
+    .select()
+    .single();
 
-  if (profileError) throw profileError;
+  if (profileError) {
+    // If profile creation fails, clean up the auth user
+    await supabase.auth.admin.deleteUser(authData.user.id).catch(() => {});
+    throw new Error(`Profile creation error: ${JSON.stringify(profileError)}`);
+  }
 
-  return authData;
+  return { ...authData, profile: profileData };
 };
 
 export const signIn = async (email: string, password: string) => {
@@ -65,7 +80,7 @@ export const getUserProfile = async (authId: string) => {
     .from('users')
     .select('*')
     .eq('auth_id', authId)
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
   return data;

@@ -166,16 +166,23 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white dark:bg-gray-800 shadow-sm z-50 border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm z-[100] border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <button 
-              onClick={() => navigate('/messages')} 
+              onClick={() => navigate(-1)} 
               className="w-8 h-8 flex items-center justify-center"
             >
               <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400 text-lg"></i>
             </button>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Settings</h1>
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-lg flex items-center justify-center">
+                <i className="ri-cpu-line text-white text-sm"></i>
+              </div>
+              <h1 className="text-lg font-bold text-gray-900 dark:text-white" style={{ fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}>
+                DirectLine
+              </h1>
+            </div>
             <div className="w-8"></div>
           </div>
         </div>
@@ -183,6 +190,25 @@ export default function SettingsPage() {
 
       {/* Main Content */}
       <main className="pt-20 pb-6 px-4">
+        {/* Claim Phone Number Button */}
+        <div className="mb-6">
+          <button
+            onClick={() => navigate('/claim-phone-number')}
+            className="w-full bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 text-white rounded-xl p-4 shadow-lg flex items-center justify-between"
+          >
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                <i className="ri-phone-line text-white text-lg"></i>
+              </div>
+              <div className="text-left">
+                <h3 className="font-semibold">Claim Phone Number</h3>
+                <p className="text-sm text-blue-100">Get your dedicated phone number</p>
+              </div>
+            </div>
+            <i className="ri-arrow-right-line text-white text-xl"></i>
+          </button>
+        </div>
+
         {/* AI Personality Section */}
         <div className="mb-8">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">

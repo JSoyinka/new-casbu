@@ -380,24 +380,23 @@ export default function ChatPage() {
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <button 
-              onClick={() => navigate('/messages')} 
+              onClick={() => navigate(-1)} 
               className="w-8 h-8 flex items-center justify-center"
             >
               <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400 text-lg"></i>
             </button>
-            <div className="flex items-center space-x-3">
-              <img 
-                src={creator?.image || 'https://readdy.ai/api/search-image?query=Professional%20portrait%20placeholder&width=100&height=100&seq=placeholder1&orientation=squarish'} 
-                alt={creator?.name || 'Creator'}
-                className="w-8 h-8 rounded-full object-cover"
-              />
-              <div>
-                <h1 className="text-sm font-bold text-gray-900 dark:text-white">{creator?.name || 'Creator'}</h1>
-                <p className="text-xs text-green-500 dark:text-green-400">Online</p>
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-lg flex items-center justify-center">
+                <i className="ri-cpu-line text-white text-sm"></i>
               </div>
+              <img 
+                src="https://readdy.ai/api/search-image?query=Modern%20technology%20logo%20design%20for%20DirectLine%20app%2C%20sleek%20futuristic%20typography%2C%20connected%20circuit%20lines%20integrated%20into%20letters%2C%20gradient%20blue%20to%20purple%20color%20scheme%2C%20tech%20startup%20aesthetic%2C%20minimalist%20design%2C%20transparent%20background%2C%20high%20contrast%2C%20professional%20branding%2C%20sans-serif%20font%20with%20geometric%20elements%2C%20digital%20communication%20theme&width=300&height=80&seq=directline-logo-main&orientation=landscape"
+                alt="DirectLine"
+                className="h-6"
+              />
             </div>
             <button className="w-8 h-8 flex items-center justify-center">
-              <i className="ri-more-2-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              <i className="ri-more-2-fill text-gray-600 dark:text-gray-400 text-lg"></i>
             </button>
           </div>
         </div>

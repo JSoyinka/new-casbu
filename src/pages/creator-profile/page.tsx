@@ -139,9 +139,13 @@ export default function CreatorProfilePage() {
             </button>
             <div className="flex items-center space-x-2">
               <div className="w-6 h-6 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-lg flex items-center justify-center">
-                <i className="ri-circuit-line text-white text-sm"></i>
+                <i className="ri-cpu-line text-white text-sm"></i>
               </div>
-              <h1 className="text-lg font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '-0.02em' }}>Direct Line</h1>
+              <img 
+                src="https://readdy.ai/api/search-image?query=Modern%20technology%20logo%20design%20for%20DirectLine%20app%2C%20sleek%20futuristic%20typography%2C%20connected%20circuit%20lines%20integrated%20into%20letters%2C%20gradient%20blue%20to%20purple%20color%20scheme%2C%20tech%20startup%20aesthetic%2C%20minimalist%20design%2C%20transparent%20background%2C%20high%20contrast%2C%20professional%20branding%2C%20sans-serif%20font%20with%20geometric%20elements%2C%20digital%20communication%20theme&width=300&height=80&seq=directline-logo-main&orientation=landscape"
+                alt="DirectLine"
+                className="h-6"
+              />
             </div>
             <button className="w-8 h-8 flex items-center justify-center">
               <i className="ri-share-line text-gray-600 dark:text-gray-400 text-lg"></i>

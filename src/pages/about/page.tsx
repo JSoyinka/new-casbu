@@ -3,173 +3,117 @@ import { useNavigate } from 'react-router-dom';
 export default function AboutPage() {
   const navigate = useNavigate();
 
-  const appInfo = {
-    version: '2.1.0',
-    buildNumber: '2024.01.15',
-    lastUpdate: 'January 15, 2024'
-  };
-
-  const legalLinks = [
-    { icon: 'ri-file-text-line', title: 'Terms of Service', subtitle: 'User agreement and terms' },
-    { icon: 'ri-shield-check-line', title: 'Privacy Policy', subtitle: 'How we protect your data' },
-    { icon: 'ri-copyright-line', title: 'Copyright Policy', subtitle: 'DMCA and content rights' },
-    { icon: 'ri-scales-line', title: 'Community Guidelines', subtitle: 'Rules and standards' },
-    { icon: 'ri-cookie-line', title: 'Cookie Policy', subtitle: 'How we use cookies' }
-  ];
-
-  const teamMembers = [
-    { name: 'Engineering Team', role: 'Building the platform', icon: 'ri-code-line' },
-    { name: 'Design Team', role: 'Crafting the experience', icon: 'ri-palette-line' },
-    { name: 'Support Team', role: 'Helping our community', icon: 'ri-customer-service-line' },
-    { name: 'Creator Success', role: 'Empowering creators', icon: 'ri-star-line' }
-  ];
-
-  const socialLinks = [
-    { icon: 'ri-twitter-x-line', name: 'Twitter', handle: '@CreatorConnect' },
-    { icon: 'ri-instagram-line', name: 'Instagram', handle: '@creatorconnect' },
-    { icon: 'ri-facebook-line', name: 'Facebook', handle: 'CreatorConnect' },
-    { icon: 'ri-linkedin-line', name: 'LinkedIn', handle: 'CreatorConnect' }
-  ];
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 w-full bg-white dark:bg-gray-800 shadow-sm z-50 border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 left-0 right-0 w-full bg-white/10 backdrop-blur-xl shadow-sm z-[100] border-b border-white/20">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <button 
-              onClick={() => navigate('/profile')} 
+              onClick={() => navigate(-1)} 
               className="w-8 h-8 flex items-center justify-center"
             >
-              <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              <i className="ri-arrow-left-line text-white text-lg"></i>
             </button>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">About</h1>
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
+                <i className="ri-cpu-line text-white text-sm"></i>
+              </div>
+              <img 
+                src="https://readdy.ai/api/search-image?query=Modern%20technology%20logo%20design%20for%20DirectLine%20app%2C%20sleek%20futuristic%20typography%2C%20connected%20circuit%20lines%20integrated%20into%20letters%2C%20gradient%20blue%20to%20purple%20color%20scheme%2C%20tech%20startup%20aesthetic%2C%20minimalist%20design%2C%20transparent%20background%2C%20high%20contrast%2C%20professional%20branding%2C%20sans-serif%20font%20with%20geometric%20elements%2C%20digital%20communication%20theme&width=300&height=80&seq=directline-logo-main&orientation=landscape"
+                alt="DirectLine"
+                className="h-6"
+              />
+            </div>
             <div className="w-8"></div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="pt-20 pb-6 px-4">
-        {/* App Logo & Info */}
-        <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-8 text-white text-center mb-6">
-          <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl font-bold" style={{ fontFamily: '"Pacifico", serif' }}>CC</span>
-          </div>
-          <h2 className="text-2xl font-bold mb-2">Direct Line</h2>
-          <p className="text-purple-100 mb-4">Connecting creators with their biggest fans</p>
-          <div className="inline-block bg-white/20 px-4 py-2 rounded-full text-sm">
-            Version {appInfo.version}
-          </div>
-        </div>
-
-        {/* Mission Statement */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Our Mission</h2>
-          <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            Direct Line empowers creators to build meaningful relationships with their audience through exclusive content, 
-            direct messaging, and AI-powered engagement tools. We believe in putting creators first and giving them the tools 
-            they need to succeed.
-          </p>
-        </div>
-
-        {/* App Information */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">App Information</h2>
-          </div>
-          <div className="p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Version</span>
-              <span className="font-medium text-gray-900 dark:text-white">{appInfo.version}</span>
+      {/* Content */}
+      <div className="pt-16 px-4 pb-8">
+        <div className="max-w-md mx-auto">
+          {/* Logo Section */}
+          <div className="text-center py-12">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-3xl mb-6 shadow-2xl">
+              <i className="ri-cpu-line text-white text-4xl"></i>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Build Number</span>
-              <span className="font-medium text-gray-900 dark:text-white">{appInfo.buildNumber}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600 dark:text-gray-400">Last Update</span>
-              <span className="font-medium text-gray-900 dark:text-white">{appInfo.lastUpdate}</span>
-            </div>
-            <button className="w-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 py-3 rounded-lg font-medium border border-purple-200 dark:border-purple-800">
-              <i className="ri-refresh-line mr-2"></i>
-              Check for Updates
-            </button>
+            <img 
+              src="https://readdy.ai/api/search-image?query=Modern%20technology%20logo%20design%20for%20DirectLine%20app%2C%20sleek%20futuristic%20typography%2C%20connected%20circuit%20lines%20integrated%20into%20letters%2C%20gradient%20blue%20to%20purple%20color%20scheme%2C%20tech%20startup%20aesthetic%2C%20minimalist%20design%2C%20transparent%20background%2C%20high%20contrast%2C%20professional%20branding%2C%20sans-serif%20font%20with%20geometric%20elements%2C%20digital%20communication%20theme&width=300&height=80&seq=directline-logo-main&orientation=landscape"
+              alt="DirectLine"
+              className="h-12 mx-auto mb-2"
+            />
+            <p className="text-purple-100 mb-4">Connecting creators with their biggest fans</p>
+            <p className="text-sm text-purple-200">Version 1.0.0</p>
           </div>
-        </div>
 
-        {/* Team */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Our Team</h2>
-          </div>
-          <div className="p-6 grid grid-cols-2 gap-3">
-            {teamMembers.map((member, index) => (
-              <div key={index} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg text-center">
-                <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <i className={`${member.icon} text-purple-600 dark:text-purple-400 text-xl`}></i>
-                </div>
-                <h3 className="font-medium text-gray-900 dark:text-white text-sm mb-1">{member.name}</h3>
-                <p className="text-xs text-gray-600 dark:text-gray-400">{member.role}</p>
+          {/* About Content */}
+          <div className="space-y-6">
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
+              <h3 className="text-lg font-semibold text-white mb-3">Our Mission</h3>
+              <p className="text-purple-100 text-sm leading-relaxed">
+                We believe in empowering creators to build meaningful connections with their audience through personalized, tiered subscription experiences.
+              </p>
+            </div>
+
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
+              <h3 className="text-lg font-semibold text-white mb-3">What We Offer</h3>
+              <ul className="space-y-3 text-purple-100 text-sm">
+                <li className="flex items-start">
+                  <i className="ri-check-line text-green-400 mr-2 mt-0.5"></i>
+                  <span>Flexible subscription tiers for every budget</span>
+                </li>
+                <li className="flex items-start">
+                  <i className="ri-check-line text-green-400 mr-2 mt-0.5"></i>
+                  <span>Direct messaging with your favorite creators</span>
+                </li>
+                <li className="flex items-start">
+                  <i className="ri-check-line text-green-400 mr-2 mt-0.5"></i>
+                  <span>AI-powered personalized interactions</span>
+                </li>
+                <li className="flex items-start">
+                  <i className="ri-check-line text-green-400 mr-2 mt-0.5"></i>
+                  <span>Secure payment processing</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
+              <h3 className="text-lg font-semibold text-white mb-3">Contact Us</h3>
+              <div className="space-y-3 text-purple-100 text-sm">
+                <p className="flex items-center">
+                  <i className="ri-mail-line mr-3 text-purple-300"></i>
+                  support@directline.app
+                </p>
+                <p className="flex items-center">
+                  <i className="ri-global-line mr-3 text-purple-300"></i>
+                  www.directline.app
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* Legal Links */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Legal & Policies</h2>
+            <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-6 border border-white/20">
+              <h3 className="text-lg font-semibold text-white mb-3">Legal</h3>
+              <div className="space-y-2">
+                <button className="w-full text-left text-purple-100 text-sm py-2 hover:text-white transition-colors">
+                  Terms of Service
+                </button>
+                <button className="w-full text-left text-purple-100 text-sm py-2 hover:text-white transition-colors">
+                  Privacy Policy
+                </button>
+                <button className="w-full text-left text-purple-100 text-sm py-2 hover:text-white transition-colors">
+                  Cookie Policy
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="p-6 space-y-3">
-            {legalLinks.map((link, index) => (
-              <button key={index} className="w-full p-4 bg-gray-50 dark:bg-gray-700 rounded-lg text-left">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center">
-                    <i className={`${link.icon} text-gray-600 dark:text-gray-400`}></i>
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-medium text-gray-900 dark:text-white">{link.title}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{link.subtitle}</p>
-                  </div>
-                  <i className="ri-arrow-right-s-line text-gray-400"></i>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
 
-        {/* Social Media */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 mb-6">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Follow Us</h2>
-          </div>
-          <div className="p-6 grid grid-cols-2 gap-3">
-            {socialLinks.map((social, index) => (
-              <button key={index} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg text-left">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                    <i className={`${social.icon} text-purple-600 dark:text-purple-400 text-lg`}></i>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white text-sm">{social.name}</h3>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{social.handle}</p>
-                  </div>
-                </div>
-              </button>
-            ))}
+          {/* Footer */}
+          <div className="text-center mt-8 text-purple-200 text-xs">
+            <p>© 2024 DirectLine. All rights reserved.</p>
           </div>
         </div>
-
-        {/* Credits */}
-        <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-6 text-white text-center">
-          <i className="ri-heart-fill text-3xl mb-3 block"></i>
-          <h3 className="font-semibold mb-2">Made with love for creators</h3>
-          <p className="text-sm text-purple-100">
-            © 2024 Direct Line. All rights reserved.
-          </p>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }

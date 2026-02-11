@@ -137,7 +137,7 @@ export default function SubscribersPage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900 dark:text-white">
-                      {subscription.subscriber?.full_name || 'Unknown User'}
+                      {subscription.subscriber?.full_name || 'User'}
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {subscription.subscriber?.email}
