@@ -1,90 +1,22 @@
-import { useState, useEffect } from 'react';
+
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../contexts/AuthContext';
 
 export default function SettingsPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [aiVerbose, setAiVerbose] = useState(true);
   const [aiVariations, setAiVariations] = useState(true);
   const [autoSuggestions, setAutoSuggestions] = useState(true);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(false);
 
-  // Load settings from Supabase
-  useEffect(() => {
-    const loadSettings = async () => {
-      if (!user?.id) {
-        // Apply dark mode by default for non-logged in users
-        document.documentElement.classList.add('dark');
-        return;
-      }
-      
-      const { data } = await supabase
-        .from('user_settings')
-        .select('*')
-        .eq('user_id', user.id)
-        .single();
-      
-      if (data) {
-        setDarkMode(data.dark_mode ?? true);
-        setAiVerbose(data.ai_verbose ?? true);
-        setAiVariations(data.ai_variations ?? true);
-        setAutoSuggestions(data.auto_suggestions ?? true);
-        setNotificationsEnabled(data.notifications_enabled ?? true);
-        setSoundEnabled(data.sound_enabled ?? false);
-        
-        // Apply dark mode setting
-        if (data.dark_mode ?? true) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-      } else {
-        // No settings found, apply dark mode by default
-        document.documentElement.classList.add('dark');
-      }
-    };
-    
-    loadSettings();
-  }, [user]);
-
-  const toggleDarkMode = async () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    
-    if (newDarkMode) {
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    if (!darkMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
-    }
-    
-    // Save to Supabase
-    if (user?.id) {
-      await supabase
-        .from('user_settings')
-        .upsert({
-          user_id: user.id,
-          dark_mode: newDarkMode,
-          updated_at: new Date().toISOString()
-        });
-    }
-  };
-
-  const handleToggleSetting = async (settingName: string, currentValue: boolean, setter: (value: boolean) => void) => {
-    const newValue = !currentValue;
-    setter(newValue);
-    
-    if (user?.id) {
-      await supabase
-        .from('user_settings')
-        .upsert({
-          user_id: user.id,
-          [settingName]: newValue,
-          updated_at: new Date().toISOString()
-        });
     }
   };
 
@@ -98,7 +30,7 @@ export default function SettingsPage() {
           subtitle: 'AI provides detailed, comprehensive replies',
           type: 'toggle',
           value: aiVerbose,
-          onChange: () => handleToggleSetting('ai_verbose', aiVerbose, setAiVerbose)
+          onChange: setAiVerbose
         },
         {
           icon: 'ri-shuffle-line',
@@ -106,7 +38,7 @@ export default function SettingsPage() {
           subtitle: 'AI uses different phrasings for similar responses',
           type: 'toggle',
           value: aiVariations,
-          onChange: () => handleToggleSetting('ai_variations', aiVariations, setAiVariations)
+          onChange: setAiVariations
         },
         {
           icon: 'ri-lightbulb-line',
@@ -114,7 +46,7 @@ export default function SettingsPage() {
           subtitle: 'Show AI-generated reply suggestions',
           type: 'toggle',
           value: autoSuggestions,
-          onChange: () => handleToggleSetting('auto_suggestions', autoSuggestions, setAutoSuggestions)
+          onChange: setAutoSuggestions
         }
       ]
     },
@@ -140,7 +72,7 @@ export default function SettingsPage() {
           subtitle: 'Receive notifications for new messages',
           type: 'toggle',
           value: notificationsEnabled,
-          onChange: () => handleToggleSetting('notifications_enabled', notificationsEnabled, setNotificationsEnabled)
+          onChange: setNotificationsEnabled
         },
         {
           icon: 'ri-volume-up-line',
@@ -148,7 +80,7 @@ export default function SettingsPage() {
           subtitle: 'Play sound for notifications',
           type: 'toggle',
           value: soundEnabled,
-          onChange: () => handleToggleSetting('sound_enabled', soundEnabled, setSoundEnabled)
+          onChange: setSoundEnabled
         }
       ]
     }

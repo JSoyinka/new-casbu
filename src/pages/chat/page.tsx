@@ -376,28 +376,52 @@ export default function ChatPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm z-[100] border-b border-gray-200/50 dark:border-gray-700/50">
+      <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg shadow-sm z-[100] border-b border-gray-200 dark:border-gray-700">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <button 
-              onClick={() => navigate(-1)} 
-              className="w-8 h-8 flex items-center justify-center"
-            >
-              <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400 text-lg"></i>
-            </button>
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-lg flex items-center justify-center">
-                <i className="ri-cpu-line text-white text-sm"></i>
+            <div className="flex items-center space-x-3">
+              <button 
+                onClick={() => navigate('/messages')}
+                className="w-8 h-8 flex items-center justify-center"
+              >
+                <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
+              
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <img 
+                    src={creator.image} 
+                    alt={creator.name}
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  {creator.isOnline && (
+                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
+                  )}
+                </div>
+                
+                <div>
+                  <div className="flex items-center space-x-2">
+                    <h1 className="font-semibold text-gray-900 dark:text-white">{creator.name}</h1>
+                    <span className={`text-xs px-2 py-1 rounded-full ${getTierColor(creator.tier)}`}>
+                      {creator.tier}
+                    </span>
+                  </div>
+                  <p className="text-xs text-green-500">{creator.isOnline ? 'Online now' : 'Offline'}</p>
+                </div>
               </div>
-              <img 
-                src="https://readdy.ai/api/search-image?query=Modern%20technology%20logo%20design%20for%20DirectLine%20app%2C%20sleek%20futuristic%20typography%2C%20connected%20circuit%20lines%20integrated%20into%20letters%2C%20gradient%20blue%20to%20purple%20color%20scheme%2C%20tech%20startup%20aesthetic%2C%20minimalist%20design%2C%20transparent%20background%2C%20high%20contrast%2C%20professional%20branding%2C%20sans-serif%20font%20with%20geometric%20elements%2C%20digital%20communication%20theme&width=300&height=80&seq=directline-logo-main&orientation=landscape"
-                alt="DirectLine"
-                className="h-6"
-              />
             </div>
-            <button className="w-8 h-8 flex items-center justify-center">
-              <i className="ri-more-2-fill text-gray-600 dark:text-gray-400 text-lg"></i>
-            </button>
+            
+            <div className="flex items-center space-x-2">
+              <button 
+                onClick={() => setShowSummary(true)}
+                className="w-8 h-8 flex items-center justify-center"
+              >
+                <i className="ri-file-text-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
+              <button className="w-8 h-8 flex items-center justify-center">
+                <i className="ri-more-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
+            </div>
           </div>
         </div>
       </header>

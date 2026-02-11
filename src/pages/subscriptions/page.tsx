@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
 
 export default function SubscriptionsPage() {
   const navigate = useNavigate();
-  const { isDemoUser } = useAuth();
   const [activeTab, setActiveTab] = useState('active');
 
   const activeSubscriptions = [
@@ -46,9 +44,6 @@ export default function SubscriptionsPage() {
     }
   ];
 
-  // Only show subscriptions for demo users
-  const displayedSubscriptions = isDemoUser ? activeSubscriptions : [];
-
   const getTierColor = (tier: string) => {
     switch (tier) {
       case 'VIP': return 'bg-gradient-to-r from-purple-500 to-pink-500 text-white';
@@ -59,7 +54,7 @@ export default function SubscriptionsPage() {
   };
 
   const getTotalSpending = () => {
-    return displayedSubscriptions.reduce((total, sub) => total + sub.price, 0);
+    return activeSubscriptions.reduce((total, sub) => total + sub.price, 0);
   };
 
   const getEngagementColor = (engagement: number) => {
@@ -68,34 +63,21 @@ export default function SubscriptionsPage() {
     return 'from-red-400 to-pink-500';
   };
 
-  const getMessageCount = () => {
-    return isDemoUser ? 47 : 0;
-  };
-
-  const getAvgRating = () => {
-    return isDemoUser ? 4.9 : 0;
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm z-[100] border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">My Subscriptions</h1>
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-lg flex items-center justify-center">
-                <i className="ri-cpu-line text-white text-sm"></i>
-              </div>
-              <h1 className="text-lg font-bold text-gray-900 dark:text-white" style={{ fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}>
-                DirectLine
-              </h1>
+              <button className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
+                <i className="ri-notification-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
+              <button className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
+                <i className="ri-more-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
             </div>
-            <button 
-              onClick={() => navigate('/settings')}
-              className="w-8 h-8 flex items-center justify-center"
-            >
-              <i className="ri-settings-3-line text-gray-600 dark:text-gray-400 text-lg"></i>
-            </button>
           </div>
         </div>
       </header>
@@ -115,12 +97,10 @@ export default function SubscriptionsPage() {
               <div>
                 <div className="flex items-baseline space-x-2 mb-2">
                   <h2 className="text-3xl font-bold">${getTotalSpending().toFixed(2)}</h2>
-                  {isDemoUser && (
-                    <div className="flex items-center space-x-1 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
-                      <i className="ri-arrow-up-line text-xs"></i>
-                      <span className="text-xs">+12%</span>
-                    </div>
-                  )}
+                  <div className="flex items-center space-x-1 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
+                    <i className="ri-arrow-up-line text-xs"></i>
+                    <span className="text-xs">+12%</span>
+                  </div>
                 </div>
                 <p className="text-purple-100">Monthly spending</p>
               </div>
@@ -132,17 +112,17 @@ export default function SubscriptionsPage() {
             <div className="grid grid-cols-3 gap-4">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3">
                 <p className="text-purple-100 text-xs mb-1">Active</p>
-                <p className="text-2xl font-bold">{displayedSubscriptions.length}</p>
+                <p className="text-2xl font-bold">{activeSubscriptions.length}</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3">
                 <p className="text-purple-100 text-xs mb-1">Messages</p>
-                <p className="text-2xl font-bold">{getMessageCount()}</p>
+                <p className="text-2xl font-bold">47</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3">
                 <p className="text-purple-100 text-xs mb-1">Avg Rating</p>
                 <div className="flex items-center space-x-1">
-                  <p className="text-2xl font-bold">{getAvgRating()}</p>
-                  {isDemoUser && <i className="ri-star-fill text-yellow-300 text-sm"></i>}
+                  <p className="text-2xl font-bold">4.9</p>
+                  <i className="ri-star-fill text-yellow-300 text-sm"></i>
                 </div>
               </div>
             </div>
@@ -164,7 +144,7 @@ export default function SubscriptionsPage() {
             <div className="flex items-center justify-center space-x-2">
               <span>Active</span>
               <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-xs font-bold">{displayedSubscriptions.length}</span>
+                <span className="text-white text-xs font-bold">{activeSubscriptions.length}</span>
               </div>
             </div>
           </button>
@@ -189,116 +169,98 @@ export default function SubscriptionsPage() {
       {/* Enhanced Subscriptions List */}
       <main className="px-4 pb-20">
         {activeTab === 'active' && (
-          <>
-            {displayedSubscriptions.length === 0 ? (
-              <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700">
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                  <i className="ri-vip-crown-line text-white text-3xl"></i>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">No Active Subscriptions</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6 px-4">Start subscribing to creators to see your subscriptions here</p>
-                <button 
-                  onClick={() => navigate('/')}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-xl font-medium hover:scale-105 transition-transform shadow-lg"
-                >
-                  Discover Creators
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {displayedSubscriptions.map((subscription, index) => (
-                  <div key={subscription.id} className="group relative">
-                    <div className="bg-white dark:bg-gray-800 rounded-3xl p-5 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 group-hover:scale-[1.02]">
-                      {/* Background Gradient */}
-                      <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${subscription.gradient} rounded-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
-                      
+          <div className="space-y-4">
+            {activeSubscriptions.map((subscription, index) => (
+              <div key={subscription.id} className="group relative">
+                <div className="bg-white dark:bg-gray-800 rounded-3xl p-5 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 group-hover:scale-[1.02]">
+                  {/* Background Gradient */}
+                  <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${subscription.gradient} rounded-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
+                  
+                  <div className="relative">
+                    <div className="flex items-start space-x-4 mb-4">
                       <div className="relative">
-                        <div className="flex items-start space-x-4 mb-4">
-                          <div className="relative">
-                            <img 
-                              src={subscription.creatorImage} 
-                              alt={subscription.creatorName}
-                              className="w-20 h-20 rounded-2xl object-cover shadow-lg group-hover:scale-110 transition-transform duration-300"
-                            />
-                            <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
-                              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                            </div>
-                          </div>
-                          
+                        <img 
+                          src={subscription.creatorImage} 
+                          alt={subscription.creatorName}
+                          className="w-20 h-20 rounded-2xl object-cover shadow-lg group-hover:scale-110 transition-transform duration-300"
+                        />
+                        <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="font-bold text-lg text-gray-900 dark:text-white">{subscription.creatorName}</h3>
+                          <span className={`text-xs px-3 py-1 rounded-full ${getTierColor(subscription.tier)} shadow-sm`}>
+                            {subscription.tier}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{subscription.category}</p>
+                        
+                        {/* Engagement Score */}
+                        <div className="flex items-center space-x-3 mb-3">
                           <div className="flex-1">
-                            <div className="flex items-center justify-between mb-2">
-                              <h3 className="font-bold text-lg text-gray-900 dark:text-white">{subscription.creatorName}</h3>
-                              <span className={`text-xs px-3 py-1 rounded-full ${getTierColor(subscription.tier)} shadow-sm`}>
-                                {subscription.tier}
-                              </span>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-xs text-gray-500 dark:text-gray-400">Engagement</span>
+                              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{subscription.engagement}%</span>
                             </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{subscription.category}</p>
-                            
-                            {/* Engagement Score */}
-                            <div className="flex items-center space-x-3 mb-3">
-                              <div className="flex-1">
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="text-xs text-gray-500 dark:text-gray-400">Engagement</span>
-                                  <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{subscription.engagement}%</span>
-                                </div>
-                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                                  <div 
-                                    className={`bg-gradient-to-r ${getEngagementColor(subscription.engagement)} h-2 rounded-full transition-all duration-500`}
-                                    style={{ width: `${subscription.engagement}%` }}
-                                  ></div>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-baseline space-x-1">
-                                <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">${subscription.price}</span>
-                                <span className="text-sm text-gray-500 dark:text-gray-400">/month</span>
-                              </div>
-                              <span className="text-xs text-gray-500 dark:text-gray-400">Next: {subscription.nextBilling}</span>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div 
+                                className={`bg-gradient-to-r ${getEngagementColor(subscription.engagement)} h-2 rounded-full transition-all duration-500`}
+                                style={{ width: `${subscription.engagement}%` }}
+                              ></div>
                             </div>
                           </div>
                         </div>
-
-                        {/* Enhanced Benefits */}
-                        <div className="mb-4">
-                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">What you get:</h4>
-                          <div className="grid grid-cols-2 gap-2">
-                            {subscription.benefits.map((benefit, benefitIndex) => (
-                              <div key={benefitIndex} className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl p-2">
-                                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                  <i className="ri-check-line text-white text-xs"></i>
-                                </div>
-                                <span className="text-xs text-gray-600 dark:text-gray-400">{benefit}</span>
-                              </div>
-                            ))}
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-baseline space-x-1">
+                            <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">${subscription.price}</span>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">/month</span>
                           </div>
-                        </div>
-
-                        {/* Enhanced Actions */}
-                        <div className="flex space-x-2">
-                          <button 
-                            onClick={() => navigate(`/chat/${subscription.id}`)}
-                            className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-4 rounded-2xl text-sm font-medium hover:scale-105 transition-transform shadow-lg flex items-center justify-center space-x-2"
-                          >
-                            <i className="ri-message-3-line"></i>
-                            <span>Message</span>
-                          </button>
-                          <button className="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 py-3 px-4 rounded-2xl text-sm font-medium hover:scale-105 transition-transform flex items-center justify-center space-x-2">
-                            <i className="ri-settings-line"></i>
-                            <span>Manage</span>
-                          </button>
-                          <button className="px-4 py-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-2xl hover:scale-105 transition-transform">
-                            <i className="ri-close-line"></i>
-                          </button>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">Next: {subscription.nextBilling}</span>
                         </div>
                       </div>
                     </div>
+
+                    {/* Enhanced Benefits */}
+                    <div className="mb-4">
+                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">What you get:</h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        {subscription.benefits.map((benefit, benefitIndex) => (
+                          <div key={benefitIndex} className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-700/50 rounded-xl p-2">
+                            <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                              <i className="ri-check-line text-white text-xs"></i>
+                            </div>
+                            <span className="text-xs text-gray-600 dark:text-gray-400">{benefit}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Enhanced Actions */}
+                    <div className="flex space-x-2">
+                      <button 
+                        onClick={() => navigate(`/chat/${subscription.id}`)}
+                        className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-4 rounded-2xl text-sm font-medium hover:scale-105 transition-transform shadow-lg flex items-center justify-center space-x-2"
+                      >
+                        <i className="ri-message-3-line"></i>
+                        <span>Message</span>
+                      </button>
+                      <button className="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 py-3 px-4 rounded-2xl text-sm font-medium hover:scale-105 transition-transform flex items-center justify-center space-x-2">
+                        <i className="ri-settings-line"></i>
+                        <span>Manage</span>
+                      </button>
+                      <button className="px-4 py-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-2xl hover:scale-105 transition-transform">
+                        <i className="ri-close-line"></i>
+                      </button>
+                    </div>
                   </div>
-                ))}
+                </div>
               </div>
-            )}
-          </>
+            ))}
+          </div>
         )}
 
         {activeTab === 'expired' && (
@@ -316,30 +278,28 @@ export default function SubscriptionsPage() {
         )}
 
         {/* Enhanced Quick Actions */}
-        {displayedSubscriptions.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Quick Actions</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <button 
-                onClick={() => navigate('/')}
-                className="bg-white dark:bg-gray-800 rounded-3xl p-6 text-left shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 group hover:scale-105"
-              >
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform duration-300 shadow-lg">
-                  <i className="ri-add-line text-white text-xl"></i>
-                </div>
-                <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">Find Creators</h4>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Discover new creators</p>
-              </button>
-              <button className="bg-white dark:bg-gray-800 rounded-3xl p-6 text-left shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 group hover:scale-105">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform duration-300 shadow-lg">
-                  <i className="ri-settings-line text-white text-xl"></i>
-                </div>
-                <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">Billing Settings</h4>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Manage payments</p>
-              </button>
-            </div>
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Quick Actions</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <button 
+              onClick={() => navigate('/')}
+              className="bg-white dark:bg-gray-800 rounded-3xl p-6 text-left shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 group hover:scale-105"
+            >
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform duration-300 shadow-lg">
+                <i className="ri-add-line text-white text-xl"></i>
+              </div>
+              <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">Find Creators</h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Discover new creators</p>
+            </button>
+            <button className="bg-white dark:bg-gray-800 rounded-3xl p-6 text-left shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 group hover:scale-105">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl flex items-center justify-center mb-4 group-hover:rotate-12 transition-transform duration-300 shadow-lg">
+                <i className="ri-settings-line text-white text-xl"></i>
+              </div>
+              <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">Billing Settings</h4>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Manage payments</p>
+            </button>
           </div>
-        )}
+        </div>
       </main>
 
       {/* Enhanced Bottom Navigation */}

@@ -1,19 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const { user, isDemoUser, setDemoUser, loading } = useAuth();
-  const [hasUnreadNotifications] = useState(false);
   const [activeTab, setActiveTab] = useState('discover');
-
-  // Auto-login as demo user ONLY if not authenticated with Supabase
-  useEffect(() => {
-    if (!loading && !user && !isDemoUser) {
-      setDemoUser(true);
-    }
-  }, [loading, user, isDemoUser, setDemoUser]);
 
   const featuredCreators = [
     {
@@ -69,32 +59,33 @@ export default function HomePage() {
     { name: 'Digital Art NFTs', growth: '+156%', color: 'bg-gradient-to-r from-purple-400 to-pink-500' }
   ];
 
-  // Only show featured creators for demo users
-  const displayedCreators = isDemoUser ? featuredCreators : [];
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      {/* Header */}
+      {/* Header with Glassmorphism */}
       <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm z-[100] border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-lg flex items-center justify-center">
-                <i className="ri-cpu-line text-white text-sm"></i>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
+                <i className="ri-heart-line text-white text-lg"></i>
               </div>
-              <h1 className="text-lg font-bold text-gray-900 dark:text-white" style={{ fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}>
-                DirectLine
-              </h1>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Pacifico, serif' }}>Casbu Connect</h1>
             </div>
-            <button 
-              onClick={() => navigate('/notifications')}
-              className="w-8 h-8 flex items-center justify-center relative"
-            >
-              <i className="ri-notification-line text-gray-600 dark:text-gray-400 text-lg"></i>
-              {hasUnreadNotifications && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-              )}
-            </button>
+            <div className="flex items-center space-x-3">
+              <button className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform">
+                <i className="ri-search-line text-gray-600 dark:text-gray-400 text-lg"></i>
+              </button>
+              <button className="w-10 h-10 bg-gray-100/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl flex items-center justify-center hover:scale-105 transition-transform relative">
+                <i className="ri-notification-line text-gray-600 dark:text-gray-400 text-lg"></i>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              </button>
+              <button 
+                onClick={() => navigate('/profile')}
+                className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+              >
+                <i className="ri-user-line text-white text-sm"></i>
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -102,7 +93,7 @@ export default function HomePage() {
       {/* Main Content */}
       <main className="pt-16 pb-20">
         {/* Hero Section with Animated Background */}
-        <div className="relative px-4 py-8 bg-gradient-to-br from-blue-500 via-blue-700 to-purple-600 text-white overflow-hidden">
+        <div className="relative px-4 py-8 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 text-white overflow-hidden">
           {/* Animated Background Elements */}
           <div className="absolute inset-0 opacity-20">
             <div className="absolute top-10 left-10 w-20 h-20 bg-white rounded-full animate-pulse"></div>
@@ -113,7 +104,7 @@ export default function HomePage() {
           
           <div className="relative z-10">
             <h2 className="text-3xl font-bold mb-3 animate-fade-in">Connect with Amazing Creators</h2>
-            <p className="text-blue-100 mb-6 text-lg">Get exclusive access to your favorite influencers and experts</p>
+            <p className="text-purple-100 mb-6 text-lg">Get exclusive access to your favorite influencers and experts</p>
             <div className="flex space-x-3">
               <button 
                 onClick={() => navigate('/host-signup')}
@@ -121,7 +112,7 @@ export default function HomePage() {
               >
                 Become a Creator
               </button>
-              <button className="bg-white text-blue-600 px-6 py-3 rounded-2xl font-medium hover:scale-105 transition-transform shadow-lg">
+              <button className="bg-white text-purple-600 px-6 py-3 rounded-2xl font-medium hover:scale-105 transition-transform shadow-lg">
                 Explore Now
               </button>
             </div>
@@ -174,7 +165,7 @@ export default function HomePage() {
                   <p className="text-xs text-gray-500 dark:text-gray-400">{category.count} creators</p>
                   
                   {/* Hover Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               </div>
             ))}
@@ -185,100 +176,70 @@ export default function HomePage() {
         <div className="px-4 py-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Featured Creators</h3>
-            {displayedCreators.length > 0 && (
-              <button className="text-blue-600 dark:text-blue-400 text-sm font-medium flex items-center space-x-1 hover:scale-105 transition-transform">
-                <span>View All</span>
-                <i className="ri-arrow-right-line"></i>
-              </button>
-            )}
+            <button className="text-purple-600 dark:text-purple-400 text-sm font-medium flex items-center space-x-1 hover:scale-105 transition-transform">
+              <span>View All</span>
+              <i className="ri-arrow-right-line"></i>
+            </button>
           </div>
-          {displayedCreators.length === 0 ? (
-            <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="ri-star-line text-white text-2xl"></i>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Featured Creators Yet</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6 px-4">Featured creators will appear here once they're added to the platform</p>
-              <button 
-                onClick={() => navigate('/host-signup')}
-                className="bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:scale-105 transition-transform shadow-lg"
-              >
-                Become a Creator
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {displayedCreators.map((creator, index) => (
-                <div key={creator.id} className="group relative">
-                  <div 
-                    onClick={() => navigate(`/creator/${creator.id}`)}
-                    className="bg-white dark:bg-gray-800 rounded-3xl p-5 shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 group-hover:scale-[1.02] cursor-pointer"
-                  >
-                    {/* Background Gradient */}
-                    <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${creator.gradient} rounded-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
+          <div className="space-y-4">
+            {featuredCreators.map((creator, index) => (
+              <div key={creator.id} className="group relative">
+                <div className="bg-white dark:bg-gray-800 rounded-3xl p-5 shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-gray-700 group-hover:scale-[1.02]">
+                  {/* Background Gradient */}
+                  <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${creator.gradient} rounded-3xl opacity-10 group-hover:opacity-20 transition-opacity duration-300`}></div>
+                  
+                  <div className="relative flex items-start space-x-4">
+                    <div className="relative">
+                      <img 
+                        src={creator.image} 
+                        alt={creator.name}
+                        className="w-20 h-20 rounded-2xl object-cover shadow-lg group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                      </div>
+                    </div>
                     
-                    <div className="relative flex items-start space-x-4">
-                      <div className="relative">
-                        <img 
-                          src={creator.image} 
-                          alt={creator.name}
-                          className="w-20 h-20 rounded-2xl object-cover shadow-lg group-hover:scale-110 transition-transform duration-300"
-                        />
-                        <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
-                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-bold text-lg text-gray-900 dark:text-white">{creator.name}</h4>
+                        <div className="flex items-center space-x-1 bg-purple-100 dark:bg-purple-900/30 px-3 py-1 rounded-full">
+                          <i className="ri-user-line text-purple-600 dark:text-purple-400 text-xs"></i>
+                          <span className="text-xs text-purple-600 dark:text-purple-400 font-medium">
+                            {creator.subscribers}
+                          </span>
                         </div>
                       </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{creator.category}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500 mb-4">{creator.description}</p>
                       
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-bold text-lg text-gray-900 dark:text-white">{creator.name}</h4>
-                          <div className="flex items-center space-x-1 bg-blue-100 dark:bg-blue-900/30 px-3 py-1 rounded-full">
-                            <i className="ri-user-line text-blue-600 dark:text-blue-400 text-xs"></i>
-                            <span className="text-xs text-blue-600 dark:text-blue-400 font-medium">
-                              {creator.subscribers}
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{creator.category}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mb-4">{creator.description}</p>
-                        
-                        {/* Subscription Tiers with Modern Design */}
-                        <div className="grid grid-cols-3 gap-2">
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(`/creator/${creator.id}`);
-                            }}
-                            className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform"
-                          >
-                            Basic ${creator.tier1Price}
-                          </button>
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(`/creator/${creator.id}`);
-                            }}
-                            className="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform"
-                          >
-                            Pro ${creator.tier2Price}
-                          </button>
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              navigate(`/creator/${creator.id}`);
-                            }}
-                            className="bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 text-white py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform shadow-lg"
-                          >
-                            VIP ${creator.tier3Price}
-                          </button>
-                        </div>
+                      {/* Subscription Tiers with Modern Design */}
+                      <div className="grid grid-cols-3 gap-2">
+                        <button 
+                          onClick={() => navigate(`/creator/${creator.id}/subscribe?tier=1`)}
+                          className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform"
+                        >
+                          Basic ${creator.tier1Price}
+                        </button>
+                        <button 
+                          onClick={() => navigate(`/creator/${creator.id}/subscribe?tier=2`)}
+                          className="bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-400 py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform"
+                        >
+                          Pro ${creator.tier2Price}
+                        </button>
+                        <button 
+                          onClick={() => navigate(`/creator/${creator.id}/subscribe?tier=3`)}
+                          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-3 rounded-xl text-xs font-medium hover:scale-105 transition-transform shadow-lg"
+                        >
+                          VIP ${creator.tier3Price}
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Quick Actions with Floating Design */}
@@ -316,7 +277,7 @@ export default function HomePage() {
             onClick={() => setActiveTab('discover')}
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${
               activeTab === 'discover' 
-                ? 'text-blue-600 dark:text-blue-400 scale-110' 
+                ? 'text-purple-600 dark:text-purple-400 scale-110' 
                 : 'text-gray-400 dark:text-gray-500'
             }`}
           >
@@ -330,7 +291,7 @@ export default function HomePage() {
             }}
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${
               activeTab === 'messages' 
-                ? 'text-blue-600 dark:text-blue-400 scale-110' 
+                ? 'text-purple-600 dark:text-purple-400 scale-110' 
                 : 'text-gray-400 dark:text-gray-500'
             }`}
           >
@@ -344,7 +305,7 @@ export default function HomePage() {
             }}
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${
               activeTab === 'subscriptions' 
-                ? 'text-blue-600 dark:text-blue-400 scale-110' 
+                ? 'text-purple-600 dark:text-purple-400 scale-110' 
                 : 'text-gray-400 dark:text-gray-500'
             }`}
           >
@@ -358,7 +319,7 @@ export default function HomePage() {
             }}
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${
               activeTab === 'profile' 
-                ? 'text-blue-600 dark:text-blue-400 scale-110' 
+                ? 'text-purple-600 dark:text-purple-400 scale-110' 
                 : 'text-gray-400 dark:text-gray-500'
             }`}
           >

@@ -36,7 +36,7 @@ export default function HostDashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-sm z-[100] border-b border-gray-200/50 dark:border-gray-700/50">
+      <header className="fixed top-0 w-full bg-white dark:bg-gray-800 shadow-sm z-50 border-b border-gray-200 dark:border-gray-700">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <button 
@@ -45,17 +45,9 @@ export default function HostDashboardPage() {
             >
               <i className="ri-arrow-left-line text-gray-600 dark:text-gray-400 text-lg"></i>
             </button>
-            <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-gradient-to-r from-blue-500 via-blue-700 to-purple-600 rounded-lg flex items-center justify-center">
-                <i className="ri-circuit-line text-white text-sm"></i>
-              </div>
-              <h1 className="text-lg font-bold text-gray-900 dark:text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif', letterSpacing: '-0.02em' }}>Direct Line</h1>
-            </div>
-            <button 
-              onClick={() => navigate('/settings')}
-              className="w-8 h-8 flex items-center justify-center"
-            >
-              <i className="ri-settings-3-line text-gray-600 dark:text-gray-400 text-lg"></i>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Creator Dashboard</h1>
+            <button className="w-8 h-8 flex items-center justify-center">
+              <i className="ri-notification-line text-gray-600 dark:text-gray-400 text-lg"></i>
             </button>
           </div>
         </div>

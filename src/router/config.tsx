@@ -2,13 +2,10 @@ import { RouteObject } from 'react-router-dom';
 import { lazy } from 'react';
 
 const HomePage = lazy(() => import('../pages/home/page'));
-const LoginPage = lazy(() => import('../pages/login/page'));
 const MessagesPage = lazy(() => import('../pages/messages/page'));
 const ChatPage = lazy(() => import('../pages/chat/page'));
 const SubscriptionsPage = lazy(() => import('../pages/subscriptions/page'));
-const SubscribersPage = lazy(() => import('../pages/subscribers/page'));
 const ProfilePage = lazy(() => import('../pages/profile/page'));
-const CreatorProfilePage = lazy(() => import('../pages/creator-profile/page'));
 const HostSignupPage = lazy(() => import('../pages/host-signup/page'));
 const SettingsPage = lazy(() => import('../pages/settings/page'));
 const AccountSettingsPage = lazy(() => import('../pages/account-settings/page'));
@@ -27,10 +24,6 @@ const routes: RouteObject[] = [
     element: <HomePage />
   },
   {
-    path: '/login',
-    element: <LoginPage />
-  },
-  {
     path: '/messages',
     element: <MessagesPage />
   },
@@ -43,16 +36,8 @@ const routes: RouteObject[] = [
     element: <SubscriptionsPage />
   },
   {
-    path: '/subscribers',
-    element: <SubscribersPage />
-  },
-  {
     path: '/profile',
     element: <ProfilePage />
-  },
-  {
-    path: '/creator/:id',
-    element: <CreatorProfilePage />
   },
   {
     path: '/host-signup',
